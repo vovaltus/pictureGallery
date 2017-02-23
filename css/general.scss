@@ -1,0 +1,53 @@
+@import "fonts.css";
+
+$mainFrame: 1024px;
+$color: blue;
+$font-size: 24px;
+$vertical: 200px;
+$horizontal: 236px;
+
+.image-style {
+  display: inline-block;
+  background: $color;
+  margin: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 5px 5px 10px -3px rgba(0,0,0,0.75);
+  -moz-box-shadow: 5px 5px 10px -3px rgba(0,0,0,0.75);
+  box-shadow: 5px 5px 10px -3px rgba(0,0,0,0.75);
+}
+
+body{
+  max-width: $mainFrame;
+}
+.main-wrapper{
+  background: #f0f3f6;
+  font-family: open_sans, sans-serif, Arial;
+}
+
+.main-header{
+
+  font-weight: bold;
+
+  h1 {color: #8499a7;
+    font-size: $font-size;
+    span {
+       color: #21b8c6;
+    }
+  }
+}
+.horizontal-image-wrapper{
+  @extend .image-style;
+  width: 2 * $horizontal + 10px;
+  height: $vertical;
+}
+.vertical-image-wrapper{
+  @extend .image-style;
+  width: $horizontal;
+  height: 2 * $vertical +10px;
+}
+.box-image-wrapper{
+  @extend .image-style;
+  width: $horizontal;
+  height: $vertical;
+}
+

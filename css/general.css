@@ -1,0 +1,39 @@
+@import url(fonts.css);
+
+.image-style, .horizontal-image-wrapper, .vertical-image-wrapper, .box-image-wrapper {
+  display: inline-block;
+  background: blue;
+  margin: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 5px 5px 10px -3px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 5px 5px 10px -3px rgba(0, 0, 0, 0.75);
+  box-shadow: 5px 5px 10px -3px rgba(0, 0, 0, 0.75); }
+
+body {
+  max-width: 1024px; }
+
+.main-wrapper {
+  background: #f0f3f6;
+  font-family: open_sans, sans-serif, Arial; }
+
+.main-header {
+  font-weight: bold; }
+  .main-header h1 {
+    color: #8499a7;
+    font-size: 24px; }
+    .main-header h1 span {
+      color: #21b8c6; }
+
+.horizontal-image-wrapper {
+  width: 482px;
+  height: 200px; }
+
+.vertical-image-wrapper {
+  width: 236px;
+  height: 410px; }
+
+.box-image-wrapper {
+  width: 236px;
+  height: 200px; }
+
+/*# sourceMappingURL=general.css.map */
