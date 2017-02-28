@@ -6,7 +6,7 @@ $font-size: 24px;
 $vertical: 200px;
 $horizontal: 236px;
 
-.image-style {
+%image-style {
   background: no-repeat center center;
   background-size: cover;
   margin: 5px;
@@ -19,6 +19,10 @@ $horizontal: 236px;
   display: -webkit-flex;
   align-items: flex-end;
   -webkit-align-items: flex-end;
+  cursor: pointer;
+  &:hover .down {
+    opacity: 1;
+  }
 }
 
 body{
@@ -41,19 +45,19 @@ body{
   }
 }
 .horizontal-image-wrapper{
-  @extend .image-style;
+  @extend %image-style;
   background-image: url("../images/1.jpg");
   width: 2 * $horizontal + 10px;
   height: $vertical;
 }
 .vertical-image-wrapper{
-  @extend .image-style;
+  @extend %image-style;
   background-image: url("../images/2.jpg");
   width: $horizontal;
   height: 2 * $vertical +10px;
 }
 .box-image-wrapper{
-  @extend .image-style;
+  @extend %image-style;
   background-image: url("../images/3.jpg");
   width: $horizontal;
   height: $vertical;
@@ -63,18 +67,30 @@ body{
   height: 60px;
   position: relative;
   background: rgba(255, 255, 255, 0.9);
+  opacity: 0.5;
+
 }
 
-.like, .dislike, .comments{
+%sprite{
   position: absolute;
+  top: 10px;
+  width: 33px;
+  height: 30px;
+  background: url("../images/like.png") no-repeat;
+
 }
 .like{
-
+  @extend %sprite;
+  right: 53px;
+  background-position: -33px 0;
 }
 .dislike{
-
+  @extend %sprite;
+  right: 10px;
+  background-position: -66px 0;
 }
 .comments{
-
+  @extend %sprite;
+  left: 10px;
 }
 

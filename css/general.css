@@ -1,5 +1,5 @@
 @import url(fonts.css);
-.image-style, .horizontal-image-wrapper, .vertical-image-wrapper, .box-image-wrapper {
+.horizontal-image-wrapper, .vertical-image-wrapper, .box-image-wrapper {
   background: no-repeat center center;
   background-size: cover;
   margin: 5px;
@@ -11,7 +11,10 @@
   display: flex;
   display: -webkit-flex;
   align-items: flex-end;
-  -webkit-align-items: flex-end; }
+  -webkit-align-items: flex-end;
+  cursor: pointer; }
+  .horizontal-image-wrapper:hover .down, .vertical-image-wrapper:hover .down, .box-image-wrapper:hover .down {
+    opacity: 1; }
 
 body {
   max-width: 1024px; }
@@ -47,9 +50,25 @@ body {
   width: 100%;
   height: 60px;
   position: relative;
-  background: rgba(255, 255, 255, 0.9); }
+  background: rgba(255, 255, 255, 0.9);
+  opacity: 0.5; }
 
 .like, .dislike, .comments {
-  position: absolute; }
+  position: absolute;
+  top: 10px;
+  width: 33px;
+  height: 30px;
+  background: url("../images/like.png") no-repeat; }
+
+.like {
+  right: 53px;
+  background-position: -33px 0; }
+
+.dislike {
+  right: 10px;
+  background-position: -66px 0; }
+
+.comments {
+  left: 10px; }
 
 /*# sourceMappingURL=general.css.map */
