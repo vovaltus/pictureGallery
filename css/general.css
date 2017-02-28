@@ -1,5 +1,4 @@
 @import url(fonts.css);
-
 .image-style, .horizontal-image-wrapper, .vertical-image-wrapper, .box-image-wrapper {
   display: inline-block;
   background: blue;
