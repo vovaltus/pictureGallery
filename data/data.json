@@ -1,26 +1,26 @@
 [
-  {"title":"Image-1", "url":"images/1.jpg", "like":"10", "dislike":"5", "comments":[
+  {"title":"Image-1", "url":"images/1.jpg", "shape":"square", "like":"10", "dislike":"5", "comments":[
     {"name":"jorj", "comment":"cool", "date":"11111"},{"name":"mike", "comment":"best", "date":"11111"},{"name":"zelly", "comment":"wow", "date":"11111"}
   ]},
-  {"title":"Image-2", "url":"images/2.jpg", "like":"10", "dislike":"5", "comments":[
+  {"title":"Image-2", "url":"images/2.jpg", "shape":"square", "like":"10", "dislike":"5", "comments":[
     {"name":"jorj", "comment":"cool", "date":"11111"},{"name":"mike", "comment":"best", "date":"11111"},{"name":"zelly", "comment":"wow", "date":"11111"}
   ]},
-  {"title":"Image-3", "url":"images/3.jpg", "like":"10", "dislike":"5", "comments":[
+  {"title":"Image-3", "url":"images/3.jpg", "shape":"square", "like":"10", "dislike":"5", "comments":[
     {"name":"jorj", "comment":"cool", "date":"11111"},{"name":"mike", "comment":"best", "date":"11111"},{"name":"zelly", "comment":"wow", "date":"11111"}
   ]},
-  {"title":"Image-4", "url":"images/4.jpg", "like":"10", "dislike":"5", "comments":[
+  {"title":"Image-4", "url":"images/4.jpg", "shape":"horizontal", "like":"10", "dislike":"5", "comments":[
     {"name":"jorj", "comment":"cool", "date":"11111"},{"name":"mike", "comment":"best", "date":"11111"},{"name":"zelly", "comment":"wow", "date":"11111"}
   ]},
-  {"title":"Image-5", "url":"images/5.jpg", "like":"10", "dislike":"5", "comments":[
+  {"title":"Image-5", "url":"images/5.jpg", "shape":"square", "like":"10", "dislike":"5", "comments":[
     {"name":"jorj", "comment":"cool", "date":"11111"},{"name":"mike", "comment":"best", "date":"11111"},{"name":"zelly", "comment":"wow", "date":"11111"}
   ]},
-  {"title":"Image-6", "url":"images/6.jpg", "like":"10", "dislike":"5", "comments":[
+  {"title":"Image-6", "url":"images/6.jpg", "shape":"vertical", "like":"10", "dislike":"5", "comments":[
     {"name":"jorj", "comment":"cool", "date":"11111"},{"name":"mike", "comment":"best", "date":"11111"},{"name":"zelly", "comment":"wow", "date":"11111"}
   ]},
-  {"title":"Image-7", "url":"images/7.jpg", "like":"10", "dislike":"5", "comments":[
+  {"title":"Image-7", "url":"images/7.jpg", "shape":"horizontal", "like":"10", "dislike":"5", "comments":[
     {"name":"jorj", "comment":"cool", "date":"11111"},{"name":"mike", "comment":"best", "date":"11111"},{"name":"zelly", "comment":"wow", "date":"11111"}
   ]},
-  {"title":"Image-8", "url":"images/8.jpg", "like":"10", "dislike":"5", "comments":[
+  {"title":"Image-8", "url":"images/8.jpg", "shape":"square", "like":"10", "dislike":"5", "comments":[
     {"name":"jorj", "comment":"cool", "date":"11111"},{"name":"mike", "comment":"best", "date":"11111"},{"name":"zelly", "comment":"wow", "date":"11111"}
   ]}
 ]

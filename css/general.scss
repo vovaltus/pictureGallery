@@ -7,13 +7,18 @@ $vertical: 200px;
 $horizontal: 236px;
 
 .image-style {
-  display: inline-block;
-  background: $color;
+  background: no-repeat center center;
+  background-size: cover;
   margin: 5px;
   border-radius: 5px;
   -webkit-box-shadow: 5px 5px 10px -3px rgba(0,0,0,0.75);
   -moz-box-shadow: 5px 5px 10px -3px rgba(0,0,0,0.75);
   box-shadow: 5px 5px 10px -3px rgba(0,0,0,0.75);
+  overflow: hidden;
+  display: flex;
+  display: -webkit-flex;
+  align-items: flex-end;
+  -webkit-align-items: flex-end;
 }
 
 body{
@@ -37,17 +42,39 @@ body{
 }
 .horizontal-image-wrapper{
   @extend .image-style;
+  background-image: url("../images/1.jpg");
   width: 2 * $horizontal + 10px;
   height: $vertical;
 }
 .vertical-image-wrapper{
   @extend .image-style;
+  background-image: url("../images/2.jpg");
   width: $horizontal;
   height: 2 * $vertical +10px;
 }
 .box-image-wrapper{
   @extend .image-style;
+  background-image: url("../images/3.jpg");
   width: $horizontal;
   height: $vertical;
+}
+.down {
+  width: 100%;
+  height: 60px;
+  position: relative;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.like, .dislike, .comments{
+  position: absolute;
+}
+.like{
+
+}
+.dislike{
+
+}
+.comments{
+
 }
 

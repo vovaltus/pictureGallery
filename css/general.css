@@ -1,12 +1,17 @@
 @import url(fonts.css);
 .image-style, .horizontal-image-wrapper, .vertical-image-wrapper, .box-image-wrapper {
-  display: inline-block;
-  background: blue;
+  background: no-repeat center center;
+  background-size: cover;
   margin: 5px;
   border-radius: 5px;
   -webkit-box-shadow: 5px 5px 10px -3px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 5px 5px 10px -3px rgba(0, 0, 0, 0.75);
-  box-shadow: 5px 5px 10px -3px rgba(0, 0, 0, 0.75); }
+  box-shadow: 5px 5px 10px -3px rgba(0, 0, 0, 0.75);
+  overflow: hidden;
+  display: flex;
+  display: -webkit-flex;
+  align-items: flex-end;
+  -webkit-align-items: flex-end; }
 
 body {
   max-width: 1024px; }
@@ -24,15 +29,27 @@ body {
       color: #21b8c6; }
 
 .horizontal-image-wrapper {
+  background-image: url("../images/1.jpg");
   width: 482px;
   height: 200px; }
 
 .vertical-image-wrapper {
+  background-image: url("../images/2.jpg");
   width: 236px;
   height: 410px; }
 
 .box-image-wrapper {
+  background-image: url("../images/3.jpg");
   width: 236px;
   height: 200px; }
+
+.down {
+  width: 100%;
+  height: 60px;
+  position: relative;
+  background: rgba(255, 255, 255, 0.9); }
+
+.like, .dislike, .comments {
+  position: absolute; }
 
 /*# sourceMappingURL=general.css.map */
