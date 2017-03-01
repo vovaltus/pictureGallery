@@ -107,31 +107,51 @@ Estate.UI = (function () {
 
     ui.generateItems = function (){
         console.log("generate");
-        /*
+
         var ul = document.getElementById('thumbs');
         var fragment = document.createDocumentFragment();
         ui.var.json.forEach(function(item, i, arr) {
-            var mwsiLi = document.createElement('li'),
-                mwsilLink = document.createElement('a'),
-                mwsillImage = document.createElement('div');
-            mwsiLi.classList.add('mwsi-li');
+            var imageWrapper = document.createElement('div'),
+                down = document.createElement('div'),
+                comments = document.createElement('div'),
+                like = document.createElement('div'),
+                dislike = document.createElement('div'),
+                circle = document.createElement('div'),
+                spanLike = document.createElement('span'),
+                spanDislike = document.createElement('span'),
+                spanComments = document.createElement('span');
+            if (item.shape.localeCompare("square") === 0) {
+                imageWrapper.classList.add('box-image-wrapper');
+            } else if (item.shape.localeCompare("horizontal") === 0){
+                imageWrapper.classList.add('horizontal-image-wrapper');
+            } else if (item.shape.localeCompare("vertical") === 0){
+                imageWrapper.classList.add('vertical-image-wrapper');
+            }
+            down.classList.add('down');
+            comments.classList.add('comments');
+            like.classList.add('like');
+            dislike.classList.add('dislike');
+            circle.classList.add('circle');
+            imageWrapper.style.backgroundImage = "url('" + item.url + "')";
+            spanLike.innerText(item);
             mwsilLink.classList.add('mwsil-link');
             mwsilLink.href = item.url;
             mwsilLink.title = item.title;
             mwsillImage.classList.add('mwsill-image');
             mwsillImage.style.backgroundImage = "url('" + item.url + "')";
-            if (i == arr.length - 1){
+            /*if (i == arr.length - 1){
                 mwsillImage.classList.add('selected');
                 showThumbnail(mwsilLink.href, mwsilLink.title);
                 document.getElementById("content").textContent = mwsilLink.title;
-            }
+            }*/
+            spanLike.append($(circle).clone()).append(like);
             mwsilLink.appendChild(mwsillImage);
             mwsiLi.appendChild(mwsilLink);
             fragment.appendChild(mwsiLi);
         });
 
         ul.appendChild(fragment);
-        */
+
     };
 
     ui.DetectIE = function () {

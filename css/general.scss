@@ -14,7 +14,7 @@ $horizontal: 236px;
   -webkit-box-shadow: 5px 5px 10px -3px rgba(0,0,0,0.75);
   -moz-box-shadow: 5px 5px 10px -3px rgba(0,0,0,0.75);
   box-shadow: 5px 5px 10px -3px rgba(0,0,0,0.75);
-  overflow: hidden;
+  //overflow: hidden;
   display: flex;
   display: -webkit-flex;
   align-items: flex-end;
@@ -40,25 +40,25 @@ body{
   h1 {color: #8499a7;
     font-size: $font-size;
     span {
-       color: #21b8c6;
+      color: #21b8c6;
     }
   }
 }
 .horizontal-image-wrapper{
   @extend %image-style;
-  background-image: url("../images/1.jpg");
+  //background-image: url("../images/1.jpg");
   width: 2 * $horizontal + 10px;
   height: $vertical;
 }
 .vertical-image-wrapper{
   @extend %image-style;
-  background-image: url("../images/2.jpg");
+  //background-image: url("../images/2.jpg");
   width: $horizontal;
   height: 2 * $vertical +10px;
 }
 .box-image-wrapper{
   @extend %image-style;
-  background-image: url("../images/3.jpg");
+  //background-image: url("../images/3.jpg");
   width: $horizontal;
   height: $vertical;
 }
@@ -67,13 +67,35 @@ body{
   height: 60px;
   position: relative;
   background: rgba(255, 255, 255, 0.9);
-  opacity: 0.5;
+  opacity: 0;
+  border-radius: 0 0 4px 4px;
+  transition: opacity 0.4s ease-in-out;
+  .circle{
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    border: 2px solid #a0b0ba;
 
+    z-index: 1;
+    text-align: center;
+    background: #ffffff;
+    span{
+      display: inline;
+      font-family: open_sans arial sans-serif;
+      font-weight: bold; // must be 500 but bold looks like in photoshop
+      color: #0d7f8a;
+      font-size: 11px;
+      vertical-align: text-top;
+    }
+  }
 }
 
 %sprite{
   position: absolute;
-  top: 10px;
+  top: 15px;
   width: 33px;
   height: 30px;
   background: url("../images/like.png") no-repeat;
@@ -81,16 +103,14 @@ body{
 }
 .like{
   @extend %sprite;
-  right: 53px;
+  right: 13px;
   background-position: -33px 0;
 }
 .dislike{
   @extend %sprite;
-  right: 10px;
+  right: 68px;
   background-position: -66px 0;
 }
 .comments{
   @extend %sprite;
-  left: 10px;
-}
-
+  left: 15px;}
