@@ -16,10 +16,13 @@ Estate.UI = (function () {
     };
 
     ui.init = function () {
+        //initialize variables
         ui.var.init();
         //initialize functions
         ui.fileStorageCheck.init();
         ui.FileSystemInit.init();
+        //listener added after generate items
+        //ui.listenerAdd.init();
     };
 
     ui.fileStorageCheck = {
@@ -36,10 +39,11 @@ Estate.UI = (function () {
         init: function () {
             navigator.webkitPersistentStorage.requestQuota (
                 ui.var.requestedBytes, function(grantedBytes) {
-                    window.webkitRequestFileSystem(window.PERSISTENT, grantedBytes, ui.FileSystemInit.successCallback, ui.errorCb);
+                    //for persistent storage
+                    //window.webkitRequestFileSystem(window.PERSISTENT, grantedBytes, ui.FileSystemInit.successCallback, ui.errorCb);
 
                     //for temporary storage
-                    //window.webkitRequestFileSystem(window.TEMPORARY, 1024*1024*50, successCallback, errorCb);
+                    window.webkitRequestFileSystem(window.TEMPORARY, grantedBytes, ui.FileSystemInit.successCallback, ui.errorCb);
                 }, function(e) { console.log('Error', e); }
             );
         },
@@ -89,7 +93,7 @@ Estate.UI = (function () {
 
     ui.errorRead = function (e) {
         //console.error(e);
-        console.log("There no data file in storage, trying to read from server");
+        console.log("There is no data file in storage, trying to read from server");
         ui.readJsonFromServer();
     };
     
@@ -106,9 +110,7 @@ Estate.UI = (function () {
     };
 
     ui.generateItems = function (){
-        console.log("generate");
-
-        var ul = document.getElementById('thumbs');
+        var contentWrapper = document.getElementById('content-wrapper');
         var fragment = document.createDocumentFragment();
         ui.var.json.forEach(function(item, i, arr) {
             var imageWrapper = document.createElement('div'),
@@ -121,11 +123,11 @@ Estate.UI = (function () {
                 spanDislike = document.createElement('span'),
                 spanComments = document.createElement('span');
             if (item.shape.localeCompare("square") === 0) {
-                imageWrapper.classList.add('box-image-wrapper');
+                imageWrapper.classList.add("square", "image-wrapper");
             } else if (item.shape.localeCompare("horizontal") === 0){
-                imageWrapper.classList.add('horizontal-image-wrapper');
+                imageWrapper.classList.add("horizontal", "image-wrapper");
             } else if (item.shape.localeCompare("vertical") === 0){
-                imageWrapper.classList.add('vertical-image-wrapper');
+                imageWrapper.classList.add("vertical", "image-wrapper");
             }
             down.classList.add('down');
             comments.classList.add('comments');
@@ -133,25 +135,43 @@ Estate.UI = (function () {
             dislike.classList.add('dislike');
             circle.classList.add('circle');
             imageWrapper.style.backgroundImage = "url('" + item.url + "')";
-            spanLike.innerText(item);
-            mwsilLink.classList.add('mwsil-link');
-            mwsilLink.href = item.url;
-            mwsilLink.title = item.title;
-            mwsillImage.classList.add('mwsill-image');
-            mwsillImage.style.backgroundImage = "url('" + item.url + "')";
-            /*if (i == arr.length - 1){
-                mwsillImage.classList.add('selected');
-                showThumbnail(mwsilLink.href, mwsilLink.title);
-                document.getElementById("content").textContent = mwsilLink.title;
-            }*/
-            spanLike.append($(circle).clone()).append(like);
-            mwsilLink.appendChild(mwsillImage);
-            mwsiLi.appendChild(mwsilLink);
-            fragment.appendChild(mwsiLi);
+            spanLike.innerText = item.like;
+            spanDislike.innerText = item.dislike;
+            spanComments.innerText = item.comments.length;
+            $(like).append($(circle).clone().append(spanLike));
+            $(dislike).append($(circle).clone().append(spanDislike));
+            $(comments).append($(circle).append(spanComments));
+            down.appendChild(comments);
+            down.appendChild(like);
+            down.appendChild(dislike);
+            imageWrapper.appendChild(down);
+            fragment.appendChild(imageWrapper);
         });
 
-        ul.appendChild(fragment);
+        contentWrapper.appendChild(fragment);
 
+        ui.listenerAdd.init();
+
+    };
+
+    ui.Popup = function () {
+        console.log("popup work");
+        var e = document.getElementById('popup-view');
+        if(e.style.display == 'block')
+            e.style.display = 'none';
+        else
+            e.style.display = 'block';
+    };
+    
+    ui.listenerAdd = {
+        init: function () {
+            var imageWrapperListener = document.getElementsByClassName('image-wrapper');
+            for (var i = 0; i < imageWrapperListener.length; i++){
+                imageWrapperListener[i].addEventListener('click', ui.Popup, false);
+            };
+            document.getElementById('pv-close').addEventListener('click', ui.Popup, false);
+            //document.getElementById('pv-close').addEventListener('click', ui.Popup, false);
+        }
     };
 
     ui.DetectIE = function () {

@@ -6,15 +6,29 @@ $font-size: 24px;
 $vertical: 200px;
 $horizontal: 236px;
 
-%image-style {
-  background: no-repeat center center;
-  background-size: cover;
-  margin: 5px;
-  border-radius: 5px;
+%clearFix:after{
+  content: "";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  height: 0;
+  font-size: 0;
+}
+%box-shadow{
   -webkit-box-shadow: 5px 5px 10px -3px rgba(0,0,0,0.75);
   -moz-box-shadow: 5px 5px 10px -3px rgba(0,0,0,0.75);
   box-shadow: 5px 5px 10px -3px rgba(0,0,0,0.75);
-  //overflow: hidden;
+}
+%background-image{
+  background: no-repeat center center;
+  background-size: cover;
+}
+
+%image-style {
+  @extend %box-shadow;
+  @extend %background-image;
+  margin: 5px;
+  border-radius: 5px;
   display: flex;
   display: -webkit-flex;
   align-items: flex-end;
@@ -44,21 +58,21 @@ body{
     }
   }
 }
-.horizontal-image-wrapper{
+.image-wrapper{
+
+}
+.horizontal{
   @extend %image-style;
-  //background-image: url("../images/1.jpg");
   width: 2 * $horizontal + 10px;
   height: $vertical;
 }
-.vertical-image-wrapper{
+.vertical{
   @extend %image-style;
-  //background-image: url("../images/2.jpg");
   width: $horizontal;
   height: 2 * $vertical +10px;
 }
-.box-image-wrapper{
+.square{
   @extend %image-style;
-  //background-image: url("../images/3.jpg");
   width: $horizontal;
   height: $vertical;
 }
@@ -70,26 +84,26 @@ body{
   opacity: 0;
   border-radius: 0 0 4px 4px;
   transition: opacity 0.4s ease-in-out;
-  .circle{
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 13px;
-    height: 13px;
-    border-radius: 50%;
-    border: 2px solid #a0b0ba;
+}
+.circle{
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 2px solid #a0b0ba;
 
-    z-index: 1;
-    text-align: center;
-    background: #ffffff;
-    span{
-      display: inline;
-      font-family: open_sans arial sans-serif;
-      font-weight: bold; // must be 500 but bold looks like in photoshop
-      color: #0d7f8a;
-      font-size: 11px;
-      vertical-align: text-top;
-    }
+  z-index: 1;
+  text-align: center;
+  background: #ffffff;
+  span{
+    display: inline;
+    font-family: open_sans arial sans-serif;
+    font-weight: bold; // must be 500 but bold looks like in photoshop
+    color: #0d7f8a;
+    font-size: 11px;
+    vertical-align: text-top;
   }
 }
 
@@ -99,7 +113,6 @@ body{
   width: 33px;
   height: 30px;
   background: url("../images/like.png") no-repeat;
-
 }
 .like{
   @extend %sprite;
@@ -113,4 +126,119 @@ body{
 }
 .comments{
   @extend %sprite;
-  left: 15px;}
+  left: 15px;
+}
+#popup-view{
+  top: 0; left: 0; position: fixed; width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.7);
+  display: none;
+  z-index: 2;
+}
+.pv-wrapper{
+  @extend %box-shadow;
+  @extend %clearFix;
+  width: 810px;
+  height: 600px;
+  background: #FFFFFF;
+  border-radius: 5px;
+}
+.pv-image-wrapper{
+  width: 55%;
+  height: 575px;
+  float: left;
+  .pv-image{
+    @extend %background-image;
+    background-image: url("../images/2.jpg");
+    width: 100%;
+    height: 515px;
+  }
+  .pv-like-wrapper{
+    position: relative;
+    width: 100%;
+    height: 60px;
+    background-color: #f5f9f7;
+    .pv-like, .pv-dislike{
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background-color: #e0e5e9;
+      display: flex;
+      display: -webkit-flex;
+      justify-content: center;
+      -webkit-justify-content: center;
+      align-items: center;
+      -webkit-align-items: center;
+      top: -7px;
+      .pv-sprite{
+        position: relative;
+        width: 33px;
+        height: 30px;
+        background: url("../images/like.png") no-repeat;
+      }
+    }
+    .pv-like.pv-active, .pv-dislike.pv-active{
+      top: 0px;
+      .pv-sprite{
+        .circle{
+          border-color: #FFFFFF;
+        }
+      }
+    }
+    .pv-like.pv-active{
+      background-color: #28d0ce;
+      .pv-sprite{
+        background-position: -99px 0;
+      }
+    }
+    .pv-dislike.pv-active{
+      background-color: #d02828;
+      .pv-sprite{
+        background-position: -132px 0;
+      }
+    }
+    .pv-like{
+      right: 6px;
+      .pv-sprite{
+        background-position: -33px 0;
+
+      }
+    }
+    .pv-dislike{
+      right: 77px;
+      .pv-sprite {
+        background-position: -66px 0;
+      }
+    }
+  }
+}
+.pv-comments-wrapper{
+  @extend %clearFix;
+  float: left;
+  width: 45%;
+  position: relative;
+  padding: 30px 10px 0 30px;
+  box-sizing: border-box;
+  #pv-close{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+      &:after, &:before{
+        content:"";
+        position: absolute;
+        right: 0;
+        top: 7px;
+        width: 20px;
+        height: 5px;
+        background: #21b8c6;
+      }
+      &:after{
+        transform: rotate(45deg);
+      }
+      &:before{
+        transform: rotate(135deg);
+      }
+  }
+}
