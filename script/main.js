@@ -135,6 +135,7 @@ Estate.UI = (function () {
             dislike.classList.add('dislike');
             circle.classList.add('circle');
             imageWrapper.style.backgroundImage = "url('" + item.url + "')";
+            imageWrapper.setAttribute('data-id', item.id);
             spanLike.innerText = item.like;
             spanDislike.innerText = item.dislike;
             spanComments.innerText = item.comments.length;
@@ -154,23 +155,104 @@ Estate.UI = (function () {
 
     };
 
-    ui.Popup = function () {
-        console.log("popup work");
-        var e = document.getElementById('popup-view');
-        if(e.style.display == 'block')
-            e.style.display = 'none';
-        else
-            e.style.display = 'block';
+    ui.Popup = {
+        init: function () {
+            console.log("popup");
+            var view = document.getElementById('popup-view');
+            if(view.style.display == 'block'){
+                ui.Popup.hide(this, view);
+            }
+            else {
+                ui.Popup.show(this, view);
+            }
+        },
+        show: function (obj, view) {
+            var id = obj.getAttribute('data-id'),
+                $like = $("#pv-like"),
+                $dislike = $("#pv-dislike");
+            id = parseInt(id);
+            view.style.display = 'block';
+            view.setAttribute('data-id', id);
+            ui.var.json.forEach(function(item, i, arr) {
+               if (item.id === id){
+                   $(".pv-image").css("background-image", "url(" + item.url + ")");
+                   $like.find('span').text(item.like);
+                   $dislike.find('span').text(item.dislike);
+                   if (item.ld === 1){
+                       $like.addClass("pv-active")
+                   } else if (item.ld === -1){
+                       $dislike.addClass("pv-active")
+                   } else {
+                       $dislike.remove("pv-active");
+                       $like.remove("pv-active");
+                   }
+               }
+            });
+            console.log(obj);
+        },
+        hide: function (obj, view) {
+            view.style.display = 'none';
+            console.log(obj);
+        }
     };
-    
+
+    ui.PopupButtons = {
+        active: function () {
+            var like = document.getElementById('pv-like'),
+                dislike = document.getElementById('pv-dislike'),
+                 id = document.getElementById("popup-view");
+                id = id.getAttribute('data-id');
+                id = parseInt(id);
+            if (!this.classList.contains("pv-active") && this.id.localeCompare("pv-like") === 0 && dislike.classList.contains("pv-active")) {
+                ui.PopupButtons.data( 1, -1, id);
+                dislike.classList.remove("pv-active");
+                like.classList.add("pv-active");
+            } else if (!this.classList.contains("pv-active") && this.id.localeCompare("pv-dislike") === 0 && like.classList.contains("pv-active")){
+                ui.PopupButtons.data( -1, 1, id);
+                like.classList.remove("pv-active");
+                dislike.classList.add("pv-active");
+            } else {
+                if (this.classList.contains("pv-active") && this.id.localeCompare("pv-dislike") === 0) {
+                    ui.PopupButtons.data( 0, -1, id);
+                } else if (!this.classList.contains("pv-active") && this.id.localeCompare("pv-dislike") === 0) {
+                    ui.PopupButtons.data( 0, 1, id);
+                } else if (this.classList.contains("pv-active") && this.id.localeCompare("pv-like") === 0) {
+                    ui.PopupButtons.data( -1, 0, id);
+                } else {
+                    ui.PopupButtons.data( 1, 0, id);
+                }
+                this.classList.toggle("pv-active");
+            }
+        },
+        data: function (like, dislike, id) {
+            //console.log("like: " + like + "; dislike: " + dislike + "; id: " + id + ";");
+            ui.var.json.forEach(function(item, i , arr){
+                if (id === item.id){
+                    item.like += like;
+                    item.dislike += dislike;
+                    item.ld += like - dislike;
+                    $("#pv-like").find('span').text(item.like);
+                    $("#pv-dislike").find('span').text(item.dislike);
+                    console.log("item.ld: " + item.ld + "; item.like: " + item.like + "; item.dislike: " + item.dislike + ";");
+                }
+            });
+
+        }
+        //console.log(this.id);
+        // $(this).toggleClass("pv-active");
+
+
+    };
     ui.listenerAdd = {
         init: function () {
             var imageWrapperListener = document.getElementsByClassName('image-wrapper');
             for (var i = 0; i < imageWrapperListener.length; i++){
-                imageWrapperListener[i].addEventListener('click', ui.Popup, false);
-            };
-            document.getElementById('pv-close').addEventListener('click', ui.Popup, false);
-            //document.getElementById('pv-close').addEventListener('click', ui.Popup, false);
+                imageWrapperListener[i].addEventListener('click', ui.Popup.init, false);
+            }
+            document.getElementById('pv-close').addEventListener('click', ui.Popup.init, false);
+            document.getElementById('pv-like').addEventListener('click', ui.PopupButtons.active, false);
+            document.getElementById('pv-dislike').addEventListener('click', ui.PopupButtons.active, false);
+
         }
     };
 

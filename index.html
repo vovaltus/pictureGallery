@@ -73,39 +73,55 @@
                     <div class="pv-image-wrapper">
                         <div class="pv-image"></div>
                         <div class="pv-like-wrapper">
-                            <div class="pv-like pv-active">
+                            <div id="pv-like">
                                 <div class="pv-sprite">
                                     <div class="circle">
-                                        <span>6</span>
+                                        <span></span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="pv-dislike">
+                            <div id="pv-dislike">
                                 <div class="pv-sprite">
                                     <div class="circle">
-                                        <span>10</span>
+                                        <span></span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="pv-comments-wrapper">
-                        <div id="pv-close">
-
-                        </div>
-                        <h2 class="pv-quantity-comments"></h2>
+                        <div id="pv-close"></div>
+                        <h2 class="pv-quantity-comments">Comments: 5</h2>
                         <ul class="pvc-cnt">
                             <li class="pvc-item">
-                                <span class="pvc-name"></span>
-                                <span class="pvc-time"></span>
-                                <span class="pvc-text"></span>
+                                <span class="pvc-name">Anon</span>
+                                <span class="pvc-time">some time</span>
+                                <div class="pvc-text">
+                                    <span>Trololo</span>
+                                </div>
+                            </li>
+                            <li class="pvc-item">
+                                <span class="pvc-name">Anon</span>
+                                <span class="pvc-time">some time</span>
+                                <div class="pvc-text">
+                                    <span>Trololo Trololo Trololo Trololo  Trololo Trololo Trololo Trololo TrololoTrololoTrololoTrololo Trololo Trololo Trololo Trololo</span>
+                                </div>
+                            </li>
+                            <li class="pvc-item">
+                                <span class="pvc-name">Anon</span>
+                                <span class="pvc-time">some time</span>
+                                <div class="pvc-text">
+                                    <span>Trololo</span>
+                                </div>
                             </li>
                         </ul>
                         <form class="pvc-input-form">
-                            <input class="pvci-name" type="text" name="pvci-name">
+                            <input id="pvci-name" placeholder="Type your name here..." type="text" name="pvci-name">
                             <div class="pvci-comment-wrapper">
-                                <input class="pvci-comment" type="text" name="pvci-comment">
-                                <div class="pvci-send"></div>
+                                <textarea id="pvci-comment" placeholder="Write your comment here..." type="text" name="pvci-comment"></textarea>
+                                <div id="pvci-send">
+                                    <div class="pvci-sprite"></div>
+                                </div>
                             </div>
                         </form>
                     </div>
