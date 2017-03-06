@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="90860d5a-7096-4a75-9944-6ace2da26767" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/script/main.js" afterPath="$PROJECT_DIR$/script/main.js" />
     </list>
     <ignored path="enter.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -41,8 +40,8 @@
       <file leaf-file-name="main.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/script/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="122">
-              <caret line="314" column="45" lean-forward="false" selection-start-line="314" selection-start-column="45" selection-end-line="314" selection-end-column="45" />
+            <state relative-caret-position="-686">
+              <caret line="321" column="39" lean-forward="false" selection-start-line="321" selection-start-column="39" selection-end-line="321" selection-end-column="39" />
               <folding>
                 <element signature="e#0#42#0" expanded="false" />
               </folding>
@@ -410,7 +409,7 @@
       <workItem from="1488611177493" duration="25171000" />
       <workItem from="1488753485629" duration="58000" />
       <workItem from="1488794485504" duration="10481000" />
-      <workItem from="1488827937705" duration="8502000" />
+      <workItem from="1488827937705" duration="8591000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1487841462540</created>
@@ -468,11 +467,18 @@
       <option name="project" value="LOCAL" />
       <updated>1488836959855</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="refactor js">
+      <created>1488837119660</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1488837119660</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="136669000" />
+    <option name="totallyTimeSpent" value="136758000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -519,7 +525,8 @@
     <MESSAGE value="some css and js" />
     <MESSAGE value="popup in progress" />
     <MESSAGE value="popup functional ended, taskList added" />
-    <option name="LAST_COMMIT_MESSAGE" value="popup functional ended, taskList added" />
+    <MESSAGE value="refactor js" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor js" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -853,8 +860,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/script/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="122">
-          <caret line="314" column="45" lean-forward="false" selection-start-line="314" selection-start-column="45" selection-end-line="314" selection-end-column="45" />
+        <state relative-caret-position="-686">
+          <caret line="321" column="39" lean-forward="false" selection-start-line="321" selection-start-column="39" selection-end-line="321" selection-end-column="39" />
           <folding>
             <element signature="e#0#42#0" expanded="false" />
           </folding>
