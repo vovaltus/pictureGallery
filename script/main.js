@@ -111,7 +111,7 @@ Estate.UI = (function () {
     ui.generateItems = function (){
         var contentWrapper = document.getElementById('content-wrapper');
         var fragment = document.createDocumentFragment();
-        ui.var.json.forEach(function(item, i, arr) {
+        ui.var.json.forEach(function(item) {
             var imageWrapper = document.createElement('div'),
                 down = document.createElement('div'),
                 comments = document.createElement('div'),
@@ -172,7 +172,7 @@ Estate.UI = (function () {
             id = parseInt(id);
             view.style.display = 'block';
             view.setAttribute('data-id', id);
-            ui.var.json.forEach(function(item, i, arr) {
+            ui.var.json.forEach(function(item) {
                if (item.id === id){
                    $(".pv-image").css("background-image", "url(" + item.url + ")");
                    $like.find('span').text(item.like);
@@ -207,7 +207,7 @@ Estate.UI = (function () {
         addComments: function (obj) {
             var pvcCnt = document.getElementById('pvc-cnt');
             var fragment = document.createDocumentFragment();
-            obj.comments.forEach(function (item, i, arr) {
+            obj.comments.forEach(function (item) {
                fragment = ui.Popup.buildComment(item, fragment);
             });
             pvcCnt.appendChild(fragment);
@@ -223,7 +223,7 @@ Estate.UI = (function () {
               comment: $("#pvci-comment").val(),
               date: Date.now()
             };
-            ui.var.json.forEach(function (item, i, arr) {
+            ui.var.json.forEach(function (item) {
                if (item.id === id){
                    ui.Popup.buildComment(comment, fragment);
                    item.comments.push(comment);
@@ -312,7 +312,7 @@ Estate.UI = (function () {
         },
         data: function (like, dislike, id) {
             //console.log("like: " + like + "; dislike: " + dislike + "; id: " + id + ";");
-            ui.var.json.forEach(function(item, i , arr){
+            ui.var.json.forEach(function(item){
                 if (id === item.id){
                     item.like += like;
                     item.dislike += dislike;
