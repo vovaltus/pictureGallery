@@ -10,7 +10,6 @@ Estate.UI = (function () {
             this.json;
             this.file;
             this.globFs = null;
-            this.readError = false;
             this.requestedBytes = 1024*1024*110; // 10MB
         }
     };
@@ -40,10 +39,10 @@ Estate.UI = (function () {
             navigator.webkitPersistentStorage.requestQuota (
                 ui.var.requestedBytes, function(grantedBytes) {
                     //for persistent storage
-                    //window.webkitRequestFileSystem(window.PERSISTENT, grantedBytes, ui.FileSystemInit.successCallback, ui.errorCb);
+                    window.webkitRequestFileSystem(window.PERSISTENT, grantedBytes, ui.FileSystemInit.successCallback, ui.errorCb);
 
                     //for temporary storage
-                    window.webkitRequestFileSystem(window.TEMPORARY, grantedBytes, ui.FileSystemInit.successCallback, ui.errorCb);
+                    //window.webkitRequestFileSystem(window.TEMPORARY, grantedBytes, ui.FileSystemInit.successCallback, ui.errorCb);
                 }, function(e) { console.log('Error', e); }
             );
         },
@@ -69,7 +68,7 @@ Estate.UI = (function () {
             }, ui.errorCb);
         }, ui.errorRead)
     };
-    
+
     ui.readJsonFromServer = function () {
         var json;
         var xml = new XMLHttpRequest();
@@ -84,7 +83,7 @@ Estate.UI = (function () {
                 ui.callbackFromServer(json);
                 //return json2;
             }
-        }    
+        }
     };
 
     ui.errorCb = function (e) {
@@ -92,11 +91,11 @@ Estate.UI = (function () {
     };
 
     ui.errorRead = function (e) {
-        //console.error(e);
+        console.error(e);
         console.log("There is no data file in storage, trying to read from server");
         ui.readJsonFromServer();
     };
-    
+
     ui.callbackFromServer = function (json) {
         ui.var.json = json;
         console.log("read file from server");
@@ -179,20 +178,107 @@ Estate.UI = (function () {
                    $like.find('span').text(item.like);
                    $dislike.find('span').text(item.dislike);
                    if (item.ld === 1){
-                       $like.addClass("pv-active")
+                       $like.addClass("pv-active");
+                       $dislike.removeClass("pv-active");
                    } else if (item.ld === -1){
-                       $dislike.addClass("pv-active")
+                       $dislike.addClass("pv-active");
+                       $like.removeClass("pv-active");
                    } else {
-                       $dislike.remove("pv-active");
-                       $like.remove("pv-active");
+                       $dislike.removeClass("pv-active");
+                       $like.removeClass("pv-active");
                    }
+                   console.log("item.ld: " + item.ld + ";");
+                   ui.Popup.addComments(item);
                }
             });
+
             console.log(obj);
         },
         hide: function (obj, view) {
+            $("#pv-dislike").removeClass("pv-active");
+            $("#pv-like").removeClass("pv-active");
+            document.getElementById('pvc-cnt').innerHTML = "";
+            $('#pvci-name').val("");
+            $('#pvci-comment').val("");
             view.style.display = 'none';
+
             console.log(obj);
+        },
+        addComments: function (obj) {
+            var pvcCnt = document.getElementById('pvc-cnt');
+            var fragment = document.createDocumentFragment();
+            obj.comments.forEach(function (item, i, arr) {
+               fragment = ui.Popup.buildComment(item, fragment);
+            });
+            pvcCnt.appendChild(fragment);
+        },
+        addComment: function () {
+            var pvcCnt = document.getElementById('pvc-cnt');
+            var fragment = document.createDocumentFragment();
+            var id = document.getElementById("popup-view");
+                id = id.getAttribute("data-id");
+                id = parseInt(id);
+            var comment = {
+              name: $("#pvci-name").val(),
+              comment: $("#pvci-comment").val(),
+              date: Date.now()
+            };
+            ui.var.json.forEach(function (item, i, arr) {
+               if (item.id === id){
+                   ui.Popup.buildComment(comment, fragment);
+                   item.comments.push(comment);
+               }
+            });
+            pvcCnt.appendChild(fragment);
+        },
+        buildComment: function (item, fragment) {
+            var li = document.createElement('li'),
+                name = document.createElement('span'),
+                time = document.createElement('span'),
+                textWrapper = document.createElement('div'),
+                text = document.createElement('span'),
+                date = ui.Popup.dateGenerate(item.date);
+            text.innerText = item.comment;
+            textWrapper.classList.add("pvc-text");
+            time.innerText = date;
+            time.classList.add("pvc-time");
+            name.innerText = "By " + item.name;
+            name.classList.add("pvc-name");
+            li.classList.add("pvc-item");
+            textWrapper.appendChild(text);
+            li.appendChild(name);
+            li.appendChild(time);
+            li.appendChild(textWrapper);
+            fragment.appendChild(li);
+            return fragment;
+        },
+        dateGenerate: function (timeOld) {
+            var currentDate = Date.now();
+                currentDate = new Date(currentDate);
+            var dateOld = new Date (timeOld);
+            var dayDiff = (currentDate - timeOld)/86400000;
+            //console.log("currentDate: " + currentDate + "; dateOld: " + dateOld + ";");
+            //var day = currentDate.getDay();
+
+                var hours = dateOld.getHours();
+                var minutes = dateOld.getMinutes();
+                var ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // the hour '0' should be '12'
+                minutes = minutes < 10 ? '0'+minutes : minutes;
+                var strTime = hours + ':' + minutes + ' ' + ampm;
+                //console.log(dayDiff + " " +strTime);
+                var str;
+                if (dayDiff < 1){
+                    str = "Today " + strTime;
+                    return str;
+                } else if (dayDiff > 1 && dayDiff < 2){
+                    str = 1 + " day " + strTime;
+                    return str;
+                } else if (dayDiff > 2){
+                    str = Math.floor(dayDiff) + " days ago " + strTime;
+                    return str;
+                }
         }
     };
 
@@ -252,15 +338,16 @@ Estate.UI = (function () {
             document.getElementById('pv-close').addEventListener('click', ui.Popup.init, false);
             document.getElementById('pv-like').addEventListener('click', ui.PopupButtons.active, false);
             document.getElementById('pv-dislike').addEventListener('click', ui.PopupButtons.active, false);
-
+            document.getElementById('pvci-send').addEventListener('click', ui.Popup.addComment, false);
         }
     };
 
     ui.DetectIE = function () {
+        var detectIEregexp;
         if (navigator.userAgent.indexOf('MSIE') != -1)
-            var detectIEregexp = /MSIE (\d+\.\d+);/;
+            detectIEregexp = /MSIE (\d+\.\d+);/;
         else
-            var detectIEregexp = /Trident.*rv[ :]*(\d+\.\d+)/;
+            detectIEregexp = /Trident.*rv[ :]*(\d+\.\d+)/;
 
         if (detectIEregexp.test(navigator.userAgent)) {
             var ieversion = new Number(RegExp.$1)
