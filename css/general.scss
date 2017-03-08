@@ -29,6 +29,15 @@ $horizontal: 236px;
   background-size: cover;
 }
 
+%flex-center{
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  -webkit-justify-content: center;
+  align-items: center;
+  -webkit-align-items: center;
+}
+
 %image-style {
   @extend %box-shadow;
   @extend %background-image;
@@ -64,7 +73,7 @@ body{
   }
 }
 .image-wrapper{
-
+  @extend %clearFix
 }
 .horizontal{
   @extend %image-style;
@@ -166,12 +175,7 @@ body{
       width: 60px;
       height: 60px;
       background-color: #e0e5e9;
-      display: flex;
-      display: -webkit-flex;
-      justify-content: center;
-      -webkit-justify-content: center;
-      align-items: center;
-      -webkit-align-items: center;
+      @extend %flex-center;
       top: -7px;
       cursor: pointer;
       .pv-sprite{
@@ -320,12 +324,7 @@ body{
   width: 50px;
   height: 50px;
   background-color: #21b8c6;
-  display: flex;
-  display: -webkit-flex;
-  justify-content: center;
-  -webkit-justify-content: center;
-  align-items: center;
-  -webkit-align-items: center;
+  @extend %flex-center;
   cursor: pointer;
 }
 .pvci-sprite{
@@ -340,4 +339,43 @@ body{
 ::-webkit-input-placeholder {
   text-indent: 10px;
   padding-top: 5px;
+}
+
+.add-file-wrapper{
+  background-color: #FFFFFF;
+  cursor: auto;
+  //@extend %flex-center;
+  #add-files{
+    //display: none;
+    width: 0.1px;
+    height: 0.1px;
+  }
+  .af-label{
+    display: block;
+    cursor: pointer;
+    text-align: center;
+    margin: 75px auto auto auto;
+    figure {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #21b8c6;
+      margin: 0 auto;
+      -webkit-box-shadow: 0px 3px 4px -2px rgba(0,0,0,0.35);
+      -moz-box-shadow: 0px 3px 4px -2px rgba(0,0,0,0.35);
+      box-shadow: 0px 3px 4px -2px rgba(0,0,0,0.35);
+      @extend %flex-center;
+      img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+    span{
+      @include font(14px);
+      font-weight: 500;
+      color: #a0b0ba;
+      display: inline-block;
+      margin-top: 7px;
+    }
+  }
 }

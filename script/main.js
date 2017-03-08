@@ -2,15 +2,14 @@
  * Created by Admin on 19.02.2017.
  */
 var Estate = Estate || {};
-Estate.UI = (function () {
+Estate.UI = function () {
     var ui = {};
     ui.var = {
         // Declare variables
         init: function () {
-            this.json;
-            this.file;
+            this.json = [];
             this.globFs = null;
-            this.requestedBytes = 1024*1024*110; // 10MB
+            this.requestedBytes = 1024 * 1024 * 110; // 10MB
         }
     };
 
@@ -36,29 +35,31 @@ Estate.UI = (function () {
 
     ui.FileSystemInit = {
         init: function () {
-            navigator.webkitPersistentStorage.requestQuota (
-                ui.var.requestedBytes, function(grantedBytes) {
+            navigator.webkitPersistentStorage.requestQuota(
+                ui.var.requestedBytes, function (grantedBytes) {
                     //for persistent storage
-                    window.webkitRequestFileSystem(window.PERSISTENT, grantedBytes, ui.FileSystemInit.successCallback, ui.errorCb);
+                    window.webkitRequestFileSystem(window.PERSISTENT, grantedBytes, ui.FileSystemInit.successCallback, ui.errorFs);
 
                     //for temporary storage
                     //window.webkitRequestFileSystem(window.TEMPORARY, grantedBytes, ui.FileSystemInit.successCallback, ui.errorCb);
-                }, function(e) { console.log('Error', e); }
+                }, function (e) {
+                    console.log('Error', e);
+                }
             );
         },
         successCallback: function (fs) {
             ui.var.globFs = fs;
-            ui.readFromFile("data.json");
+            ui.readFromFileStorage("data.json");
         }
     };
 
-    ui.readFromFile = function (fileName) {
-        ui.var.globFs.root.getFile(fileName, {}, function(fileEntry) {
-            fileEntry.file(function(file) {
+    ui.readFromFileStorage = function (fileName) {
+        ui.var.globFs.root.getFile(fileName, {}, function (fileEntry) {
+            fileEntry.file(function (file) {
                 var reader = new FileReader();
-                reader.onloadend = function(e) {
-                    if (fileName == 'data.json'){
-                        ui.callbackFromStorage(JSON.parse(this.result));
+                reader.onloadend = function (e) {
+                    if (fileName == 'data.json') {
+                        ui.callbackFromFileStorage(JSON.parse(this.result));
                     }
                     else {
                         //callback3(fileEntry.toURL());
@@ -81,9 +82,77 @@ Estate.UI = (function () {
                 } catch (e) {
                 }
                 ui.callbackFromServer(json);
-                //return json2;
+                //return json;
             }
         }
+    };
+
+    ui.readFile = function () {
+        if (ui.var.globFs === null && this.files && this.files[0]){
+                var FR = new FileReader();
+
+                FR.addEventListener("load", function(e) {
+                    ui.newData(e.target.result);
+                });
+
+                FR.readAsDataURL( this.files[0] );
+        } else {
+            ui.writeFile(this.files[0], escape(this.files[0].name))
+        }
+
+    };
+
+    ui.newData = function (img) {
+        var newPicture = {
+            id: ui.var.json.length + 1,
+            url: img,
+            shape: ui.shapeIdentify(img),
+            like: 0,
+            dislike: 0,
+            ld: 0,
+            comments: []
+        };
+        console.log(newPicture.shape);
+        ui.var.json.push(newPicture);
+        ui.callbackReadFile();
+        if (ui.var.globFs !== null){
+            ui.writeFile(ui.var.json, "data.json")
+        }
+    };
+
+    ui.writeFile = function (object, fileName) {
+        if (fileName.localeCompare('data.json') !== 0){
+            fileName = ui.var.json.length + "-" + fileName;
+        }
+        ui.var.globFs.root.getFile(fileName, {create: true}, function (fileEntry) {
+            fileEntry.createWriter(function (fileWriter) {
+
+                fileWriter.seek(0);
+
+                if (fileName.localeCompare('data.json') === 0){
+                    var b = new Blob([JSON.stringify(object)], {type: 'text/plain'});
+                    fileWriter.write(b);
+                } else {
+                    fileWriter.write(object);
+                }
+
+                fileWriter.onwriteend = function(e) {
+                    if (fileName.localeCompare('data.json') !== 0) {
+                        ui.newData(fileEntry.toURL());
+                    }
+                };
+
+                fileWriter.onerror = function(e) {
+                    console.log('Write failed: ' + e.toString());
+                };
+            }, ui.errorCb);
+        }, ui.errorCb);
+    };
+
+    ui.errorFs = function (e) {
+        console.log("error initialise file system load data from JS");
+        ui.loadData.init();
+        ui.generateItems("firstTime");
     };
 
     ui.errorCb = function (e) {
@@ -99,66 +168,84 @@ Estate.UI = (function () {
     ui.callbackFromServer = function (json) {
         ui.var.json = json;
         console.log("read file from server");
-        ui.generateItems();
+        ui.generateItems("firstTime");
     };
 
-    ui.callbackFromStorage = function (json) {
+    ui.callbackFromFileStorage = function (json) {
         ui.var.json = json;
         console.log("read file from storage");
-        ui.generateItems();
+        ui.generateItems("firstTime");
     };
 
-    ui.generateItems = function (){
+    ui.callbackReadFile = function () {
+        //ui.writeFile(ui.var.json);
+        $(".image-wrapper").remove();
+        ui.generateItems("");
+    };
+
+    ui.generateItems = function (str) {
         var contentWrapper = document.getElementById('content-wrapper');
         var fragment = document.createDocumentFragment();
-        ui.var.json.forEach(function(item) {
-            var imageWrapper = document.createElement('div'),
-                down = document.createElement('div'),
-                comments = document.createElement('div'),
-                like = document.createElement('div'),
-                dislike = document.createElement('div'),
-                circle = document.createElement('div'),
-                spanLike = document.createElement('span'),
-                spanDislike = document.createElement('span'),
-                spanComments = document.createElement('span');
-            if (item.shape.localeCompare("square") === 0) {
-                imageWrapper.classList.add("square", "image-wrapper");
-            } else if (item.shape.localeCompare("horizontal") === 0){
-                imageWrapper.classList.add("horizontal", "image-wrapper");
-            } else if (item.shape.localeCompare("vertical") === 0){
-                imageWrapper.classList.add("vertical", "image-wrapper");
-            }
-            down.classList.add('down');
-            comments.classList.add('comments');
-            like.classList.add('like');
-            dislike.classList.add('dislike');
-            circle.classList.add('circle');
-            imageWrapper.style.backgroundImage = "url('" + item.url + "')";
-            imageWrapper.setAttribute('data-id', item.id);
-            spanLike.innerText = item.like;
-            spanDislike.innerText = item.dislike;
-            spanComments.innerText = item.comments.length;
-            $(like).append($(circle).clone().append(spanLike));
-            $(dislike).append($(circle).clone().append(spanDislike));
-            $(comments).append($(circle).append(spanComments));
-            down.appendChild(comments);
-            down.appendChild(like);
-            down.appendChild(dislike);
-            imageWrapper.appendChild(down);
-            fragment.appendChild(imageWrapper);
+        ui.var.json.forEach(function (item) {
+            ui.generateItem(item, fragment);
         });
 
         contentWrapper.appendChild(fragment);
+        if (str.localeCompare("firstTime") === 0) {
+            ui.listenerAdd.init();
+        } else {
+            ui.listenerAdd.popup();
+        }
+        //ui.masonry.init();
 
-        ui.listenerAdd.init();
+    };
 
+    ui.generateItem = function (item, fragment) {
+        var imageWrapper = document.createElement('div'),
+            down = document.createElement('div'),
+            comments = document.createElement('div'),
+            like = document.createElement('div'),
+            dislike = document.createElement('div'),
+            circle = document.createElement('div'),
+            spanLike = document.createElement('span'),
+            spanDislike = document.createElement('span'),
+            spanComments = document.createElement('span');
+        if (item.shape.localeCompare("square") === 0) {
+            imageWrapper.classList.add("square", "image-wrapper");
+        } else if (item.shape.localeCompare("horizontal") === 0) {
+            imageWrapper.classList.add("horizontal", "image-wrapper");
+        } else if (item.shape.localeCompare("vertical") === 0) {
+            imageWrapper.classList.add("vertical", "image-wrapper");
+        }
+        down.classList.add('down');
+        comments.classList.add('comments');
+        like.classList.add('like');
+        dislike.classList.add('dislike');
+        circle.classList.add('circle');
+        imageWrapper.style.backgroundImage = "url('" + item.url + "')";
+        imageWrapper.setAttribute('data-id', item.id);
+        spanLike.innerText = item.like;
+        spanDislike.innerText = item.dislike;
+        spanComments.innerText = item.comments.length;
+        $(like).append($(circle).clone().append(spanLike));
+        $(dislike).append($(circle).clone().append(spanDislike));
+        $(comments).append($(circle).append(spanComments));
+        down.appendChild(comments);
+        down.appendChild(like);
+        down.appendChild(dislike);
+        imageWrapper.appendChild(down);
+        fragment.appendChild(imageWrapper)
+    };
+
+    ui.shapeIdentify = function (img) {
+        return "square";
     };
 
     ui.Popup = {
         init: function () {
             console.log("popup");
             var view = document.getElementById('popup-view');
-            if(view.style.display == 'block'){
+            if (view.style.display == 'block') {
                 ui.Popup.hide(this, view);
             }
             else {
@@ -172,24 +259,24 @@ Estate.UI = (function () {
             id = parseInt(id);
             view.style.display = 'block';
             view.setAttribute('data-id', id);
-            ui.var.json.forEach(function(item) {
-               if (item.id === id){
-                   $(".pv-image").css("background-image", "url(" + item.url + ")");
-                   $like.find('span').text(item.like);
-                   $dislike.find('span').text(item.dislike);
-                   if (item.ld === 1){
-                       $like.addClass("pv-active");
-                       $dislike.removeClass("pv-active");
-                   } else if (item.ld === -1){
-                       $dislike.addClass("pv-active");
-                       $like.removeClass("pv-active");
-                   } else {
-                       $dislike.removeClass("pv-active");
-                       $like.removeClass("pv-active");
-                   }
-                   console.log("item.ld: " + item.ld + ";");
-                   ui.Popup.addComments(item);
-               }
+            ui.var.json.forEach(function (item) {
+                if (item.id === id) {
+                    $(".pv-image").css("background-image", "url(" + item.url + ")");
+                    $like.find('span').text(item.like);
+                    $dislike.find('span').text(item.dislike);
+                    if (item.ld === 1) {
+                        $like.addClass("pv-active");
+                        $dislike.removeClass("pv-active");
+                    } else if (item.ld === -1) {
+                        $dislike.addClass("pv-active");
+                        $like.removeClass("pv-active");
+                    } else {
+                        $dislike.removeClass("pv-active");
+                        $like.removeClass("pv-active");
+                    }
+                    console.log("item.ld: " + item.ld + ";");
+                    ui.Popup.addComments(item);
+                }
             });
 
             console.log(obj);
@@ -208,26 +295,25 @@ Estate.UI = (function () {
             var pvcCnt = document.getElementById('pvc-cnt');
             var fragment = document.createDocumentFragment();
             obj.comments.forEach(function (item) {
-               fragment = ui.Popup.buildComment(item, fragment);
+                fragment = ui.Popup.buildComment(item, fragment);
             });
             pvcCnt.appendChild(fragment);
         },
         addComment: function () {
             var pvcCnt = document.getElementById('pvc-cnt');
             var fragment = document.createDocumentFragment();
-            var id = document.getElementById("popup-view");
-                id = id.getAttribute("data-id");
-                id = parseInt(id);
+            var id = document.getElementById("popup-view").getAttribute("data-id");
+            id = parseInt(id);
             var comment = {
-              name: $("#pvci-name").val(),
-              comment: $("#pvci-comment").val(),
-              date: Date.now()
+                name: $("#pvci-name").val(),
+                comment: $("#pvci-comment").val(),
+                date: Date.now()
             };
             ui.var.json.forEach(function (item) {
-               if (item.id === id){
-                   ui.Popup.buildComment(comment, fragment);
-                   item.comments.push(comment);
-               }
+                if (item.id === id) {
+                    ui.Popup.buildComment(comment, fragment);
+                    item.comments.push(comment);
+                }
             });
             pvcCnt.appendChild(fragment);
         },
@@ -250,35 +336,36 @@ Estate.UI = (function () {
             li.appendChild(time);
             li.appendChild(textWrapper);
             fragment.appendChild(li);
+
             return fragment;
         },
         dateGenerate: function (timeOld) {
             var currentDate = Date.now();
-                currentDate = new Date(currentDate);
-            var dateOld = new Date (timeOld);
-            var dayDiff = (currentDate - timeOld)/86400000;
+            currentDate = new Date(currentDate);
+            var dateOld = new Date(timeOld);
+            var dayDiff = (currentDate - timeOld) / 86400000;
             //console.log("currentDate: " + currentDate + "; dateOld: " + dateOld + ";");
             //var day = currentDate.getDay();
 
-                var hours = dateOld.getHours();
-                var minutes = dateOld.getMinutes();
-                var ampm = hours >= 12 ? 'PM' : 'AM';
-                hours = hours % 12;
-                hours = hours ? hours : 12; // the hour '0' should be '12'
-                minutes = minutes < 10 ? '0'+minutes : minutes;
-                var strTime = hours + ':' + minutes + ' ' + ampm;
-                //console.log(dayDiff + " " +strTime);
-                var str;
-                if (dayDiff < 1){
-                    str = "Today " + strTime;
-                    return str;
-                } else if (dayDiff > 1 && dayDiff < 2){
-                    str = 1 + " day " + strTime;
-                    return str;
-                } else if (dayDiff > 2){
-                    str = Math.floor(dayDiff) + " days ago " + strTime;
-                    return str;
-                }
+            var hours = dateOld.getHours();
+            var minutes = dateOld.getMinutes();
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            var strTime = hours + ':' + minutes + ' ' + ampm;
+            //console.log(dayDiff + " " +strTime);
+            var str;
+            if (dayDiff < 1) {
+                str = "Today " + strTime;
+                return str;
+            } else if (dayDiff > 1 && dayDiff < 2) {
+                str = 1 + " day " + strTime;
+                return str;
+            } else if (dayDiff > 2) {
+                str = Math.floor(dayDiff) + " days ago " + strTime;
+                return str;
+            }
         }
     };
 
@@ -286,34 +373,33 @@ Estate.UI = (function () {
         active: function () {
             var like = document.getElementById('pv-like'),
                 dislike = document.getElementById('pv-dislike'),
-                 id = document.getElementById("popup-view");
-                id = id.getAttribute('data-id');
-                id = parseInt(id);
+                id = document.getElementById("popup-view").getAttribute('data-id');
+            id = parseInt(id);
             if (!this.classList.contains("pv-active") && this.id.localeCompare("pv-like") === 0 && dislike.classList.contains("pv-active")) {
-                ui.PopupButtons.data( 1, -1, id);
+                ui.PopupButtons.data(1, -1, id);
                 dislike.classList.remove("pv-active");
                 like.classList.add("pv-active");
-            } else if (!this.classList.contains("pv-active") && this.id.localeCompare("pv-dislike") === 0 && like.classList.contains("pv-active")){
-                ui.PopupButtons.data( -1, 1, id);
+            } else if (!this.classList.contains("pv-active") && this.id.localeCompare("pv-dislike") === 0 && like.classList.contains("pv-active")) {
+                ui.PopupButtons.data(-1, 1, id);
                 like.classList.remove("pv-active");
                 dislike.classList.add("pv-active");
             } else {
                 if (this.classList.contains("pv-active") && this.id.localeCompare("pv-dislike") === 0) {
-                    ui.PopupButtons.data( 0, -1, id);
+                    ui.PopupButtons.data(0, -1, id);
                 } else if (!this.classList.contains("pv-active") && this.id.localeCompare("pv-dislike") === 0) {
-                    ui.PopupButtons.data( 0, 1, id);
+                    ui.PopupButtons.data(0, 1, id);
                 } else if (this.classList.contains("pv-active") && this.id.localeCompare("pv-like") === 0) {
-                    ui.PopupButtons.data( -1, 0, id);
+                    ui.PopupButtons.data(-1, 0, id);
                 } else {
-                    ui.PopupButtons.data( 1, 0, id);
+                    ui.PopupButtons.data(1, 0, id);
                 }
                 this.classList.toggle("pv-active");
             }
         },
         data: function (like, dislike, id) {
             //console.log("like: " + like + "; dislike: " + dislike + "; id: " + id + ";");
-            ui.var.json.forEach(function(item){
-                if (id === item.id){
+            ui.var.json.forEach(function (item) {
+                if (id === item.id) {
                     item.like += like;
                     item.dislike += dislike;
                     item.ld += like - dislike;
@@ -331,14 +417,60 @@ Estate.UI = (function () {
     };
     ui.listenerAdd = {
         init: function () {
-            var imageWrapperListener = document.getElementsByClassName('image-wrapper');
-            for (var i = 0; i < imageWrapperListener.length; i++){
-                imageWrapperListener[i].addEventListener('click', ui.Popup.init, false);
-            }
+            ui.listenerAdd.popup();
+            //console.log(document.getElementById('files'));
             document.getElementById('pv-close').addEventListener('click', ui.Popup.init, false);
             document.getElementById('pv-like').addEventListener('click', ui.PopupButtons.active, false);
             document.getElementById('pv-dislike').addEventListener('click', ui.PopupButtons.active, false);
             document.getElementById('pvci-send').addEventListener('click', ui.Popup.addComment, false);
+            document.getElementById('add-files').addEventListener('change', ui.readFile, false);
+        },
+        popup: function () {
+            var imageWrapperListener = document.getElementsByClassName('image-wrapper');
+            for (var i = 0; i < imageWrapperListener.length; i++) {
+                imageWrapperListener[i].addEventListener('click', ui.Popup.init, false);
+            }
+        }
+    };
+
+    ui.loadData = {
+        init: function () {
+            ui.var.json = [
+                {id:1, url:"images/1.jpg", shape:"square", like:10, dislike:5, ld:1, comments:[
+                    {name:"jorj", comment:"cool", date:1488811539662},{name:"mike", comment:"best", date:1488811539662},{name:"zelly", comment:"wow", date:1488811539662}
+                ]},
+                {id:2, url:"images/2.jpg", shape:"square", like:10, dislike:5, ld:0, comments:[
+                    {name:"jorj", comment:"cool", date:1488811539662},{name:"mike", comment:"best", date:1488811539662},{name:"zelly", comment:"wow", date:1488811539662}
+                ]},
+                {id:3, url:"images/3.jpg", shape:"square", like:10, dislike:5, ld:0, comments:[
+                    {name:"jorj", comment:"cool", date:1488811539662},{name:"mike", comment:"best", date:1488811539662},{name:"zelly", comment:"wow", date:1488811539662}
+                ]},
+                {id:4, url:"images/4.jpg", shape:"horizontal", like:10, dislike:5, ld:0, comments:[
+                    {name:"jorj", comment:"cool", date:"11111"},{name:"mike", comment:"best", date:"1488811539662"},{name:"zelly", comment:"wow", date:"11111"}
+                ]},
+                {id:5, url:"images/5.jpg", shape:"square", like:10, dislike:5, ld:0, comments:[
+                    {name:"jorj", comment:"cool", date:"11111"},{name:"mike", comment:"best", date:"11111"},{name:"zelly", comment:"wow", date:"11111"}
+                ]},
+                {id:6, "url":"images/6.jpg", "shape":"vertical", "like":10, "dislike":5, "ld":0, "comments":[
+                    {name:"jorj", comment:"cool", date:"11111"},{name:"mike", comment:"best", date:"11111"},{name:"zelly", comment:"wow", date:"11111"}
+                ]},
+                {id:7, url:"images/7.jpg", shape:"horizontal", like:10, dislike:5, ld:0, comments:[
+                    {name:"jorj", comment:"cool", date:"11111"},{name:"mike", comment:"best", date:"11111"},{"name":"zelly", comment:"wow", date:"11111"}
+                ]},
+                {id:8, url:"images/8.jpg", shape:"square", like:10, dislike:5, ld:0, comments:[
+                    {name:"jorj", comment:"cool", date:"11111"},{name:"mike", comment:"best", date:"11111"},{name:"zelly", comment:"wow", date:"11111"}
+                ]}
+            ]
+        }
+    };
+
+    ui.masonry = {
+        init: function () {
+            $('#content-wrapper').masonry({
+                // options
+                itemSelector: '.image-wrapper',
+                columnWidth: 200
+            });
         }
     };
 
@@ -367,7 +499,7 @@ Estate.UI = (function () {
     };
 
     return ui;
-}());
+}();
 
 $(function () {
     $('html').removeClass('no-js'); /*To detect javascript*/
