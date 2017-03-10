@@ -19,10 +19,17 @@ $horizontal: 236px;
   font-family: open_sans, sans-serif, Arial;
   font-size: $font-size;
 }
+
+@mixin transition($type, $time, $delay){
+  -webkit-transition: $type $time ease-in-out $delay;
+  -moz-transition: $type $time ease-in-out $delay;
+  -o-transition: $type $time ease-in-out $delay;
+  transition: $type $time ease-in-out $delay;
+}
 %box-shadow{
-  -webkit-box-shadow: 5px 5px 10px -3px rgba(0,0,0,0.75);
-  -moz-box-shadow: 5px 5px 10px -3px rgba(0,0,0,0.75);
-  box-shadow: 5px 5px 10px -3px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 3px 3px 7px -3px rgba(0,0,0,0.5);
+  -moz-box-shadow: 3px 3px 7px -3px rgba(0,0,0,0.5);
+  box-shadow: 3px 3px 7px -3px rgba(0,0,0,0.5);
 }
 %background-image{
   background: no-repeat center center;
@@ -54,23 +61,40 @@ $horizontal: 236px;
 }
 
 body{
+  height: 100%;
+  @extend %flex-center;
+  background-color: #FFFFFF;
+}
+.center-wrapper{
   max-width: $mainFrame;
+  position: relative;
+  background: #f0f3f6;
 }
 .main-wrapper{
   @include font(14px);
-  background: #f0f3f6;
+  overflow-x: auto;
+  padding-top: 55px;
+  padding-bottom: 30px;
+  margin: 0 20px 48px 20px;
 }
 
 .main-header{
-
-  font-weight: bold;
-
-  h1 {color: #8499a7;
+  h1 {
+    color: #8499a7;
     @include font(24px);
+    position: absolute;
+    left: 25px;
+    top:  20px;
+    text-transform: uppercase;
+    font-weight: bold;
+    z-index: 100;
     span {
       color: #21b8c6;
     }
   }
+}
+#content-wrapper{
+  height: 635px;
 }
 .image-wrapper{
   @extend %clearFix
@@ -143,14 +167,24 @@ body{
   left: 15px;
 }
 #popup-view{
-  top: 0; left: 0; position: fixed; width: 100%; height: 100%;
-  background-color: rgba(0,0,0,0.7);
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(255,255,255,0.7);
   display: none;
   z-index: 2;
 }
 .pv-wrapper{
   @extend %box-shadow;
   @extend %clearFix;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
   width: 810px;
   height: 600px;
   background: #FFFFFF;
@@ -178,6 +212,7 @@ body{
       @extend %flex-center;
       top: -7px;
       cursor: pointer;
+      @include transition(all, 200ms, 0ms);
       .pv-sprite{
         position: relative;
         width: 33px;
@@ -213,7 +248,7 @@ body{
       }
     }
     #pv-dislike{
-      right: 77px;
+      right: 72px;
       .pv-sprite {
         background-position: -66px 0;
       }
@@ -225,7 +260,7 @@ body{
   float: left;
   width: 45%;
   position: relative;
-  padding: 30px 10px 0 30px;
+  padding: 30px 15px 0 30px;
   box-sizing: border-box;
   #pv-close{
     position: absolute;
@@ -256,16 +291,24 @@ body{
   font-weight: 500;
   color: #8499a7;
 }
+.pv-list-wrapper{
+
+}
+.pv-line{
+  height: 2px;
+  background-color: #d1dae3;
+  margin-right: 15px;
+}
 #pvc-cnt{
+
+  margin-top:5px;
+  height: 408px;
   width: 100%;
-  height: 410px;
-  border-bottom: 2px solid #d1dae3;
-  overflow-y: scroll;
-  margin-top: 10px;
+  overflow-y: auto;
   li{
-    @extend %clearFix;
+    //@extend %clearFix;
     list-style-type: none;
-    padding-top: 5px;
+    padding: 5px 15px 0 10px;
     .pvc-name, .pvc-time{
       @include font(11px);
       color: #95a7b3;
@@ -292,6 +335,7 @@ body{
 
 .pvc-input-form{
   @extend %clearFix;
+  width: calc(100% - 25px);
 }
 
 #pvci-name{
@@ -302,6 +346,7 @@ body{
   border: none;
   border-bottom: 2px solid #f0f3f6;
   padding-top: 5px;
+  text-indent: 10px;
 }
 .pvci-comment-wrapper{
   margin-top: 10px;
@@ -315,6 +360,8 @@ body{
   border-radius: 2px;
   outline: none;
   resize: none;
+  text-indent: 10px;
+  padding: 2px 3px 2px 0;
 }
 
 #pvci-send{
@@ -325,7 +372,9 @@ body{
   height: 50px;
   background-color: #21b8c6;
   @extend %flex-center;
+
   cursor: pointer;
+
 }
 .pvci-sprite{
   @extend %sprite;
@@ -345,10 +394,11 @@ body{
   background-color: #FFFFFF;
   cursor: auto;
   //@extend %flex-center;
-  #add-files{
-    //display: none;
-    width: 0.1px;
-    height: 0.1px;
+  #files{
+    display: none;
+    //width: 0.1px;
+    //height: 0.1px;
+    //outline: none;
   }
   .af-label{
     display: block;
@@ -378,4 +428,18 @@ body{
       margin-top: 7px;
     }
   }
+}
+//custom scroll
+
+.scroll-box::-webkit-scrollbar {
+  width: 5px;
+  height: 10px;
+}
+.scroll-box::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background: #d2d9e1;
+}
+.scroll-box::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background: #21b7c5;
 }

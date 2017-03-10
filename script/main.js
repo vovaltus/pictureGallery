@@ -9,6 +9,7 @@ Estate.UI = function () {
         init: function () {
             this.json = [];
             this.globFs = null;
+            this.$grid = undefined;
             this.requestedBytes = 1024 * 1024 * 110; // 10MB
         }
     };
@@ -19,6 +20,7 @@ Estate.UI = function () {
         //initialize functions
         ui.fileStorageCheck.init();
         ui.FileSystemInit.init();
+        ui.centerInBrowser.init();
         //listener added after generate items
         //ui.listenerAdd.init();
     };
@@ -88,35 +90,54 @@ Estate.UI = function () {
     };
 
     ui.readFile = function () {
-        if (ui.var.globFs === null && this.files && this.files[0]){
-                var FR = new FileReader();
+        console.log("work");
+        var file = this.files[0];
+        if (ui.var.globFs === null && file){
+             var FR = new FileReader();
 
-                FR.addEventListener("load", function(e) {
-                    ui.newData(e.target.result);
-                });
+             FR.addEventListener("load", function(e) {
+                ui.newData.calculateShape(e.target.result);
+             });
 
-                FR.readAsDataURL( this.files[0] );
+             FR.readAsDataURL( file );
         } else {
-            ui.writeFile(this.files[0], escape(this.files[0].name))
+            ui.writeFile(file, escape(file.name))
         }
 
     };
 
-    ui.newData = function (img) {
-        var newPicture = {
-            id: ui.var.json.length + 1,
-            url: img,
-            shape: ui.shapeIdentify(img),
-            like: 0,
-            dislike: 0,
-            ld: 0,
-            comments: []
-        };
-        console.log(newPicture.shape);
-        ui.var.json.push(newPicture);
-        ui.callbackReadFile();
-        if (ui.var.globFs !== null){
-            ui.writeFile(ui.var.json, "data.json")
+    ui.newData = {
+        calculateShape: function(img){
+            var newImg = new Image(),
+                aspect;
+            newImg.src = img;
+            newImg.onload = function () {
+                aspect = newImg.width/newImg.height;
+                if (aspect > 1.5){
+                    ui.newData.addData(img , "horizontal");
+                } else if (aspect < 0.6){
+                    ui.newData.addData(img , "vertical");
+                } else {
+                    ui.newData.addData(img , "square");
+                }
+            };
+        },
+        addData: function(img, shape){
+            var newPicture = {
+                id: ui.var.json.length + 1,
+                url: img,
+                shape: shape,
+                like: 0,
+                dislike: 0,
+                ld: 0,
+                comments: []
+            };
+            ui.var.json.push(newPicture);
+            ui.callbackReadFile();
+            if (ui.var.globFs !== null){
+                //save json to file storage
+                ui.writeFile(ui.var.json, "data.json")
+            }
         }
     };
 
@@ -138,7 +159,7 @@ Estate.UI = function () {
 
                 fileWriter.onwriteend = function(e) {
                     if (fileName.localeCompare('data.json') !== 0) {
-                        ui.newData(fileEntry.toURL());
+                        ui.newData.calculateShape(fileEntry.toURL());
                     }
                 };
 
@@ -152,7 +173,7 @@ Estate.UI = function () {
     ui.errorFs = function (e) {
         console.log("error initialise file system load data from JS");
         ui.loadData.init();
-        ui.generateItems("firstTime");
+        ui.generateItems();
     };
 
     ui.errorCb = function (e) {
@@ -168,39 +189,40 @@ Estate.UI = function () {
     ui.callbackFromServer = function (json) {
         ui.var.json = json;
         console.log("read file from server");
-        ui.generateItems("firstTime");
+        ui.generateItems();
     };
 
     ui.callbackFromFileStorage = function (json) {
         ui.var.json = json;
         console.log("read file from storage");
-        ui.generateItems("firstTime");
+        ui.generateItems();
     };
 
     ui.callbackReadFile = function () {
-        //ui.writeFile(ui.var.json);
-        $(".image-wrapper").remove();
-        ui.generateItems("");
+        $("#content-wrapper").remove();
+        ui.generateItems();
     };
 
-    ui.generateItems = function (str) {
-        var contentWrapper = document.getElementById('content-wrapper');
-        var fragment = document.createDocumentFragment();
+    ui.generateItems = function () {
+        // var contentWrapper = document.getElementById('content-wrapper');
+        var contentWrapper = document.createElement("div"),
+            fragment = document.createDocumentFragment(),
+            $mainWrapper = $(".main-wrapper");
+        contentWrapper.id = "content-wrapper";
+
         ui.var.json.forEach(function (item) {
-            ui.generateItem(item, fragment);
+            ui.generateItem(item, contentWrapper);
         });
-
-        contentWrapper.appendChild(fragment);
-        if (str.localeCompare("firstTime") === 0) {
-            ui.listenerAdd.init();
-        } else {
-            ui.listenerAdd.popup();
-        }
-        //ui.masonry.init();
-
+        ui.generateItemAddPicture(contentWrapper);
+        fragment.appendChild(contentWrapper);
+        $mainWrapper.append(fragment);
+        ui.listenerAdd.init();
+        ui.masonry.init();
+        //$('.main-wrapper').scrollLeft($('#content-wrapper').width() - 984);
+        $mainWrapper.scrollLeft($(contentWrapper).width() - 984);
     };
 
-    ui.generateItem = function (item, fragment) {
+    ui.generateItem = function (item, wrapper) {
         var imageWrapper = document.createElement('div'),
             down = document.createElement('div'),
             comments = document.createElement('div'),
@@ -234,11 +256,36 @@ Estate.UI = function () {
         down.appendChild(like);
         down.appendChild(dislike);
         imageWrapper.appendChild(down);
-        fragment.appendChild(imageWrapper)
+        wrapper.appendChild(imageWrapper)
     };
 
-    ui.shapeIdentify = function (img) {
-        return "square";
+    ui.generateItemAddPicture = function (wrapper) {
+        var addWrapper = document.createElement('div'),
+            input = document.createElement('INPUT'),
+            label = document.createElement('label'),
+            figure = document.createElement('figure'),
+            image = document.createElement('img'),
+            span = document.createElement('span');
+        addWrapper.classList.add("square", "add-file-wrapper", "image-wrapper");
+        addWrapper.setAttribute("data-id", 99999);
+        input.type = "file";
+        input.id = "files";
+        input.name = "files";
+        label.htmlFor = "files";
+        label.classList.add("af-label");
+        image.classList.add("af-img");
+        image.src = "images/white_cross.png";
+        figure.classList.add("af-figure");
+        span.classList.add("af-span");
+        span.innerHTML = "Add your<br>Picture";
+        figure.appendChild(image);
+        label.appendChild(figure);
+        label.appendChild(span);
+        addWrapper.appendChild(input);
+        addWrapper.appendChild(label);
+        wrapper.appendChild(addWrapper);
+
+
     };
 
     ui.Popup = {
@@ -255,15 +302,18 @@ Estate.UI = function () {
         show: function (obj, view) {
             var id = obj.getAttribute('data-id'),
                 $like = $("#pv-like"),
-                $dislike = $("#pv-dislike");
+                $dislike = $("#pv-dislike"),
+                $quantityComments = $(".pv-quantity-comments");
             id = parseInt(id);
             view.style.display = 'block';
             view.setAttribute('data-id', id);
+
             ui.var.json.forEach(function (item) {
                 if (item.id === id) {
                     $(".pv-image").css("background-image", "url(" + item.url + ")");
                     $like.find('span').text(item.like);
                     $dislike.find('span').text(item.dislike);
+                    $quantityComments.text("Comments: " + item.comments.length);
                     if (item.ld === 1) {
                         $like.addClass("pv-active");
                         $dislike.removeClass("pv-active");
@@ -274,7 +324,6 @@ Estate.UI = function () {
                         $dislike.removeClass("pv-active");
                         $like.removeClass("pv-active");
                     }
-                    console.log("item.ld: " + item.ld + ";");
                     ui.Popup.addComments(item);
                 }
             });
@@ -298,11 +347,14 @@ Estate.UI = function () {
                 fragment = ui.Popup.buildComment(item, fragment);
             });
             pvcCnt.appendChild(fragment);
+            //save json to file storage
+            ui.writeFile(ui.var.json, "data.json")
         },
         addComment: function () {
-            var pvcCnt = document.getElementById('pvc-cnt');
-            var fragment = document.createDocumentFragment();
-            var id = document.getElementById("popup-view").getAttribute("data-id");
+            var pvcCnt = document.getElementById('pvc-cnt'),
+                fragment = document.createDocumentFragment(),
+                id = document.getElementById("popup-view").getAttribute("data-id"),
+                $quantityComments = $(".pv-quantity-comments");
             id = parseInt(id);
             var comment = {
                 name: $("#pvci-name").val(),
@@ -313,9 +365,13 @@ Estate.UI = function () {
                 if (item.id === id) {
                     ui.Popup.buildComment(comment, fragment);
                     item.comments.push(comment);
+                    $quantityComments.text("Comments: " + item.comments.length);
                 }
             });
-            pvcCnt.appendChild(fragment);
+            $(pvcCnt).prepend(fragment);
+            $('#pvci-comment').val("");
+            //save json to file storage
+            ui.writeFile(ui.var.json, "data.json")
         },
         buildComment: function (item, fragment) {
             var li = document.createElement('li'),
@@ -335,7 +391,7 @@ Estate.UI = function () {
             li.appendChild(name);
             li.appendChild(time);
             li.appendChild(textWrapper);
-            fragment.appendChild(li);
+            $(fragment).prepend(li);
 
             return fragment;
         },
@@ -395,6 +451,8 @@ Estate.UI = function () {
                 }
                 this.classList.toggle("pv-active");
             }
+            //save json to file storage
+            ui.writeFile(ui.var.json, "data.json")
         },
         data: function (like, dislike, id) {
             //console.log("like: " + like + "; dislike: " + dislike + "; id: " + id + ";");
@@ -423,42 +481,45 @@ Estate.UI = function () {
             document.getElementById('pv-like').addEventListener('click', ui.PopupButtons.active, false);
             document.getElementById('pv-dislike').addEventListener('click', ui.PopupButtons.active, false);
             document.getElementById('pvci-send').addEventListener('click', ui.Popup.addComment, false);
-            document.getElementById('add-files').addEventListener('change', ui.readFile, false);
+            document.getElementById('files').addEventListener('change', ui.readFile, false);
         },
         popup: function () {
             var imageWrapperListener = document.getElementsByClassName('image-wrapper');
-            for (var i = 0; i < imageWrapperListener.length; i++) {
-                imageWrapperListener[i].addEventListener('click', ui.Popup.init, false);
-            }
+                for (var i = 0; i < imageWrapperListener.length; i++) {
+                    if (!$(imageWrapperListener[i]).hasClass("add-file-wrapper")) {
+                        //console.log($(".image-wrapper").hasClass("add-file-wrapper"));
+                        imageWrapperListener[i].addEventListener('click', ui.Popup.init, false);
+                    }
+                }
         }
     };
 
     ui.loadData = {
         init: function () {
             ui.var.json = [
-                {id:1, url:"images/1.jpg", shape:"square", like:10, dislike:5, ld:1, comments:[
+                {id:6, url:"images/2.jpg", shape:"vertical", like:10, dislike:5, ld:0, comments:[
                     {name:"jorj", comment:"cool", date:1488811539662},{name:"mike", comment:"best", date:1488811539662},{name:"zelly", comment:"wow", date:1488811539662}
                 ]},
-                {id:2, url:"images/2.jpg", shape:"square", like:10, dislike:5, ld:0, comments:[
+                {id:1, url:"images/1.jpg", shape:"horizontal", like:10, dislike:5, ld:1, comments:[
                     {name:"jorj", comment:"cool", date:1488811539662},{name:"mike", comment:"best", date:1488811539662},{name:"zelly", comment:"wow", date:1488811539662}
                 ]},
-                {id:3, url:"images/3.jpg", shape:"square", like:10, dislike:5, ld:0, comments:[
+                {id:2, url:"images/3.jpg", shape:"square", like:10, dislike:5, ld:0, comments:[
                     {name:"jorj", comment:"cool", date:1488811539662},{name:"mike", comment:"best", date:1488811539662},{name:"zelly", comment:"wow", date:1488811539662}
                 ]},
-                {id:4, url:"images/4.jpg", shape:"horizontal", like:10, dislike:5, ld:0, comments:[
-                    {name:"jorj", comment:"cool", date:"11111"},{name:"mike", comment:"best", date:"1488811539662"},{name:"zelly", comment:"wow", date:"11111"}
+                {id:7, url:"images/5.jpg", shape:"square", like:10, dislike:5, ld:0, comments:[
+                    {name:"jorj", comment:"cool", date:11111},{name:"mike", comment:"best", date:11111},{name:"zelly", comment:"wow", date:11111}
                 ]},
-                {id:5, url:"images/5.jpg", shape:"square", like:10, dislike:5, ld:0, comments:[
-                    {name:"jorj", comment:"cool", date:"11111"},{name:"mike", comment:"best", date:"11111"},{name:"zelly", comment:"wow", date:"11111"}
+                {id:3, url:"images/7.jpg", shape:"square", like:10, dislike:5, ld:0, comments:[
+                    {name:"jorj", comment:"cool", date:11111},{name:"mike", comment:"best", date:11111},{name:"zelly", comment:"wow", date:11111}
                 ]},
-                {id:6, "url":"images/6.jpg", "shape":"vertical", "like":10, "dislike":5, "ld":0, "comments":[
-                    {name:"jorj", comment:"cool", date:"11111"},{name:"mike", comment:"best", date:"11111"},{name:"zelly", comment:"wow", date:"11111"}
+                {id:4, url:"images/4.jpg", shape:"square", like:10, dislike:5, ld:0, comments:[
+                    {name:"jorj", comment:"cool", date:11111},{name:"mike", comment:"best", date:1488811539662},{name:"zelly", comment:"wow", date:11111}
                 ]},
-                {id:7, url:"images/7.jpg", shape:"horizontal", like:10, dislike:5, ld:0, comments:[
-                    {name:"jorj", comment:"cool", date:"11111"},{name:"mike", comment:"best", date:"11111"},{"name":"zelly", comment:"wow", date:"11111"}
+                {id:5, url:"images/8.jpg", shape:"horizontal", like:10, dislike:5, ld:0, comments:[
+                    {name:"jorj", comment:"cool", date:11111},{name:"mike", comment:"best", date:11111},{name:"zelly", comment:"wow", date:11111}
                 ]},
-                {id:8, url:"images/8.jpg", shape:"square", like:10, dislike:5, ld:0, comments:[
-                    {name:"jorj", comment:"cool", date:"11111"},{name:"mike", comment:"best", date:"11111"},{name:"zelly", comment:"wow", date:"11111"}
+                {id:8, url:"images/6.jpg", shape:"square", like:10, dislike:5, ld:0, comments:[
+                    {name:"jorj", comment:"cool", date:11111},{name:"mike", comment:"best", date:11111},{name:"zelly", comment:"wow", date:11111}
                 ]}
             ]
         }
@@ -466,11 +527,27 @@ Estate.UI = function () {
 
     ui.masonry = {
         init: function () {
-            $('#content-wrapper').masonry({
-                // options
+             ui.var.$grid = $('#content-wrapper').isotope({
                 itemSelector: '.image-wrapper',
-                columnWidth: 200
+                layoutMode: 'masonryHorizontal',
+                getSortData: {
+                    number:'[data-id] parseInt'
+                },
+                masonryHorizontal: {
+                    rowHeight: 0
+                }
             });
+            ui.masonry.sort(ui.var.$grid);
+        },
+        sort: function ($grid) {
+            $grid.isotope({ sortBy: 'number' });
+        }
+    };
+
+    ui.centerInBrowser = {
+        init: function () {
+            var height = (window.innerHeight > 0) ? window.innerHeight : screen.height;
+            $('body').css("height", height + "px");
         }
     };
 

@@ -2,107 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Kubrak Viseven enter task</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" type="text/css" href="css/general.css">
 </head>
 <body>
-    <div class="main-wrapper">
-        <header class="main-header">
-            <h1>Welcome to viseven <span>imagestock</span></h1>
-        </header>
-        <div id="content-wrapper">
-            <!--<div class="horizontal-image-wrapper">
-                <div class="down">
-                    <div class="comments">
-                        <div class="circle">
-                            <span>3</span>
-                        </div>
-                    </div>
-                    <div class="dislike">
-                        <div class="circle">
-                            <span>5</span>
-                        </div>
-                    </div>
-                    <div class="like">
-                        <div class="circle">
-                            <span>10</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="vertical-image-wrapper">
-                <div class="down">
-                    <div class="comments">
-                        <div class="circle">
-                            <span>3</span>
-                        </div>
-                    </div>
-                    <div class="dislike">
-                        <div class="circle">
-                            <span>5</span>
-                        </div>
-                    </div>
-                    <div class="like">
-                        <div class="circle">
-                            <span>10</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="box-image-wrapper">
-                <div class="down">
-                    <div class="comments">
-                        <div class="circle">
-                            <span>3</span>
-                        </div>
-                    </div>
-                    <div class="dislike">
-                        <div class="circle">
-                            <span>5</span>
-                        </div>
-                    </div>
-                    <div class="like">
-                        <div class="circle">
-                            <span>10</span>
-                        </div>
-                    </div>
-                </div>
-            </div>-->
-            <div class="square add-file-wrapper">
+    <div class="center-wrapper">
+    <header class="main-header">
+        <h1>Welcome to viseven <span>imagestock</span></h1>
+    </header>
+    <div class="main-wrapper scroll-box">
 
-                <input type="file" id="add-files" name="files">
-                <label for="add-files" class="af-label">
-                    <figure class="af-figure">
-                        <img class="af-img" src="images/white_cross.png">
-                    </figure>
-                    <span class="af-span">Add your<br>Picture</span>
-                </label>
-            </div>
-            <div id="popup-view">
-                <div class="pv-wrapper">
-                    <div class="pv-image-wrapper">
-                        <div class="pv-image"></div>
-                        <div class="pv-like-wrapper">
-                            <div id="pv-like">
-                                <div class="pv-sprite">
-                                    <div class="circle">
-                                        <span></span>
-                                    </div>
+        <div id="popup-view">
+            <div class="pv-wrapper">
+                <div class="pv-image-wrapper">
+                    <div class="pv-image"></div>
+                    <div class="pv-like-wrapper">
+                        <div id="pv-like">
+                            <div class="pv-sprite">
+                                <div class="circle">
+                                    <span></span>
                                 </div>
                             </div>
-                            <div id="pv-dislike">
-                                <div class="pv-sprite">
-                                    <div class="circle">
-                                        <span></span>
-                                    </div>
+                        </div>
+                        <div id="pv-dislike">
+                            <div class="pv-sprite">
+                                <div class="circle">
+                                    <span></span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="pv-comments-wrapper">
-                        <div id="pv-close"></div>
-                        <h2 class="pv-quantity-comments">Comments: 5</h2>
-                        <ul id="pvc-cnt">
+                </div>
+                <div class="pv-comments-wrapper">
+                    <div id="pv-close"></div>
+                    <h2 class="pv-quantity-comments">Comments: 5</h2>
+                        <ul id="pvc-cnt" class="scroll-box">
                             <!--<li class="pvc-item">
                                 <span class="pvc-name">Anon</span>
                                 <span class="pvc-time">some time</span>
@@ -125,23 +60,24 @@
                                 </div>
                             </li>-->
                         </ul>
-                        <form class="pvc-input-form">
-                            <input id="pvci-name" placeholder="Type your name here..." type="text" name="pvci-name">
-                            <div class="pvci-comment-wrapper">
-                                <textarea id="pvci-comment" placeholder="Write your comment here..." name="pvci-comment"></textarea>
-                                <div id="pvci-send">
-                                    <div class="pvci-sprite"></div>
-                                </div>
+                    <div class="pv-line"></div>
+                    <form class="pvc-input-form">
+                        <input id="pvci-name" placeholder="Type your name here..." type="text" name="pvci-name">
+                        <div class="pvci-comment-wrapper">
+                            <textarea id="pvci-comment" placeholder="Write your comment here..." name="pvci-comment"></textarea>
+                            <div id="pvci-send">
+                                <div class="pvci-sprite"></div>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-        <footer class="main-footer"></footer>
+    </div>
     </div>
 </body>
 <script type="text/javascript" src="script/jquery-3.1.1.min.js"></script>
-<script type="text/javascript" src="script/masonry.pkgd.min.js"></script>
+<script type="text/javascript" src="script/isotope.pkgd.min.js"></script>
+<script type="text/javascript" src="script/masonry-horizontal.js"></script>
 <script type="text/javascript" src="script/main.js"></script>
 </html>
