@@ -61,30 +61,34 @@ $horizontal: 236px;
 }
 
 body{
-  height: 100%;
-  @extend %flex-center;
   background-color: #FFFFFF;
+  //min-height: 768px;
+}
+html:not(.touch-device) body{
+  @extend %flex-center;
 }
 .center-wrapper{
   max-width: $mainFrame;
   position: relative;
   background: #f0f3f6;
+  @extend %clearFix
 }
 .main-wrapper{
   @include font(14px);
   overflow-x: auto;
-  padding-top: 55px;
   padding-bottom: 30px;
-  margin: 0 20px 48px 20px;
+  margin: 0 20px;
+  @extend %clearFix
 }
 
 .main-header{
+  position: relative;
+  z-index: 200;
   h1 {
     color: #8499a7;
     @include font(24px);
-    position: absolute;
-    left: 25px;
-    top:  20px;
+    padding-left: 25px;
+    padding-top:  20px;
     text-transform: uppercase;
     font-weight: bold;
     z-index: 100;
@@ -442,4 +446,21 @@ body{
 .scroll-box::-webkit-scrollbar-thumb {
   border-radius: 5px;
   background: #21b7c5;
+}
+@media only screen and (max-height: 545px) {
+  .vertical{
+    height: 200px;
+  }
+}
+
+@media only screen and (max-width: 470px) {
+  .main-header{
+    h1 {
+      font-size: 16px;
+      padding-left: 20px;
+    }
+  }
+  .horizontal{
+    width: 236px;
+  }
 }

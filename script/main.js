@@ -1,6 +1,7 @@
 /**
  * Created by Admin on 19.02.2017.
  */
+"use strict";
 var Estate = Estate || {};
 Estate.UI = function () {
     var ui = {};
@@ -9,8 +10,7 @@ Estate.UI = function () {
         init: function () {
             this.json = [];
             this.globFs = null;
-            this.$grid = undefined;
-            this.requestedBytes = 1024 * 1024 * 110; // 10MB
+            this.requestedBytes = 1024 * 1024 * 110; // 120MB
         }
     };
 
@@ -217,9 +217,13 @@ Estate.UI = function () {
         fragment.appendChild(contentWrapper);
         $mainWrapper.append(fragment);
         ui.listenerAdd.init();
-        ui.masonry.init();
-        //$('.main-wrapper').scrollLeft($('#content-wrapper').width() - 984);
-        $mainWrapper.scrollLeft($(contentWrapper).width() - 984);
+        if ($("html").hasClass("touch-device")){
+            var height = (window.innerHeight > 0) ? window.innerHeight : screen.height;
+            $('#content-wrapper').css("height", (height - 133) + "px")
+        }
+        ui.isotope.init();
+        // $mainWrapper.scrollLeft($(contentWrapper).width() - 984);
+        $mainWrapper.scrollLeft($(contentWrapper).width() - $mainWrapper.width());
     };
 
     ui.generateItem = function (item, wrapper) {
@@ -284,8 +288,6 @@ Estate.UI = function () {
         addWrapper.appendChild(input);
         addWrapper.appendChild(label);
         wrapper.appendChild(addWrapper);
-
-
     };
 
     ui.Popup = {
@@ -354,11 +356,19 @@ Estate.UI = function () {
             var pvcCnt = document.getElementById('pvc-cnt'),
                 fragment = document.createDocumentFragment(),
                 id = document.getElementById("popup-view").getAttribute("data-id"),
-                $quantityComments = $(".pv-quantity-comments");
+                $quantityComments = $(".pv-quantity-comments"),
+                name = $("#pvci-name").val(),
+                commentText = $("#pvci-comment").val();
             id = parseInt(id);
+            if (!name.replace(/\s/g, '').length) {
+                name = "Anonymous";
+            }
+            if (!commentText.replace(/\s/g, '').length){
+                return;
+            }
             var comment = {
-                name: $("#pvci-name").val(),
-                comment: $("#pvci-comment").val(),
+                name: name,
+                comment: commentText,
                 date: Date.now()
             };
             ui.var.json.forEach(function (item) {
@@ -370,6 +380,7 @@ Estate.UI = function () {
             });
             $(pvcCnt).prepend(fragment);
             $('#pvci-comment').val("");
+            ui.updateData();
             //save json to file storage
             ui.writeFile(ui.var.json, "data.json")
         },
@@ -452,7 +463,8 @@ Estate.UI = function () {
                 this.classList.toggle("pv-active");
             }
             //save json to file storage
-            ui.writeFile(ui.var.json, "data.json")
+            ui.writeFile(ui.var.json, "data.json");
+            ui.updateData();
         },
         data: function (like, dislike, id) {
             //console.log("like: " + like + "; dislike: " + dislike + "; id: " + id + ";");
@@ -468,11 +480,25 @@ Estate.UI = function () {
             });
 
         }
-        //console.log(this.id);
-        // $(this).toggleClass("pv-active");
-
-
     };
+
+    ui.updateData = function () {
+
+        var image = document.getElementsByClassName('image-wrapper');
+        console.log(image);
+        for (var i = 0; i < image.length; i++) {
+            var id = image[i].getAttribute('data-id');
+            id = parseInt(id);
+            ui.var.json.forEach(function (itemJson) {
+                if (id === itemJson.id){
+                    $(image[i]).find('.comments span').text(itemJson.comments.length);
+                    $(image[i]).find('.like span').text(itemJson.like);
+                    $(image[i]).find('.dislike span').text(itemJson.dislike);
+                }
+            });
+        }
+    };
+
     ui.listenerAdd = {
         init: function () {
             ui.listenerAdd.popup();
@@ -525,9 +551,9 @@ Estate.UI = function () {
         }
     };
 
-    ui.masonry = {
+    ui.isotope = {
         init: function () {
-             ui.var.$grid = $('#content-wrapper').isotope({
+             var grid = $('#content-wrapper').isotope({
                 itemSelector: '.image-wrapper',
                 layoutMode: 'masonryHorizontal',
                 getSortData: {
@@ -537,17 +563,19 @@ Estate.UI = function () {
                     rowHeight: 0
                 }
             });
-            ui.masonry.sort(ui.var.$grid);
-        },
-        sort: function ($grid) {
-            $grid.isotope({ sortBy: 'number' });
+            grid.isotope({ sortBy: 'number' });
         }
     };
 
     ui.centerInBrowser = {
         init: function () {
-            var height = (window.innerHeight > 0) ? window.innerHeight : screen.height;
-            $('body').css("height", height + "px");
+            var height = (window.innerHeight > 0) ? window.innerHeight : screen.height,
+                $centerWrapper = $('.center-wrapper');
+            if (!$("html").hasClass("touch-device") && height < 768){
+                $centerWrapper.css("height", "768px");
+            } else {
+                $centerWrapper.css("height", height + "px");
+            }
         }
     };
 
