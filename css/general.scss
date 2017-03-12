@@ -153,6 +153,9 @@ html:not(.touch-device) body {
   text-align: center;
   background: #ffffff;
   span {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     display: inline;
     font-family: open_sans arial sans-serif;
     font-weight: bold; // must be 500 but bold looks like in photoshop

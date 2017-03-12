@@ -135,6 +135,9 @@ body {
   text-align: center;
   background: #ffffff; }
   .circle span {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     display: inline;
     font-family: open_sans arial sans-serif;
     font-weight: bold;

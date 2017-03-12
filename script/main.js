@@ -343,7 +343,8 @@ Gallery.UI = function () {
                 id = document.getElementById("popup-view").getAttribute("data-id"),
                 $quantityComments = $(".pv-quantity-comments"),
                 name = $("#pvci-name").val(),
-                commentText = $("#pvci-comment").val();
+                $comment = $("#pvci-comment"),
+                commentText = $comment.val(),
             id = parseInt(id);
             if (!name.replace(/\s/g, "").length) {
                 name = "Anonymous";
@@ -364,7 +365,8 @@ Gallery.UI = function () {
                 }
             });
             $(pvcCnt).prepend(fragment);
-            $("#pvci-comment").val("");
+            $comment.val("");
+            $comment.focus();
             ui.updateData();
             //save json to file storage
             if (ui.var.globFs !== null) {
