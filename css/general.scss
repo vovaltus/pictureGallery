@@ -7,7 +7,7 @@ $color: blue;
 $vertical: 200px;
 $horizontal: 236px;
 
-%clearFix:after{
+%clearFix:after {
   content: "";
   display: block;
   clear: both;
@@ -15,28 +15,31 @@ $horizontal: 236px;
   height: 0;
   font-size: 0;
 }
-@mixin font($font-size){
+
+@mixin font($font-size) {
   font-family: open_sans, sans-serif, Arial;
   font-size: $font-size;
 }
 
-@mixin transition($type, $time, $delay){
+@mixin transition($type, $time, $delay) {
   -webkit-transition: $type $time ease-in-out $delay;
   -moz-transition: $type $time ease-in-out $delay;
   -o-transition: $type $time ease-in-out $delay;
   transition: $type $time ease-in-out $delay;
 }
-%box-shadow{
-  -webkit-box-shadow: 3px 3px 7px -3px rgba(0,0,0,0.5);
-  -moz-box-shadow: 3px 3px 7px -3px rgba(0,0,0,0.5);
-  box-shadow: 3px 3px 7px -3px rgba(0,0,0,0.5);
+
+%box-shadow {
+  -webkit-box-shadow: 3px 3px 7px -3px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 3px 3px 7px -3px rgba(0, 0, 0, 0.5);
+  box-shadow: 3px 3px 7px -3px rgba(0, 0, 0, 0.5);
 }
-%background-image{
+
+%background-image {
   background: no-repeat center center;
   background-size: cover;
 }
 
-%flex-center{
+%flex-center {
   display: flex;
   display: -webkit-flex;
   justify-content: center;
@@ -60,20 +63,23 @@ $horizontal: 236px;
   }
 }
 
-body{
+body {
   background-color: #FFFFFF;
   //min-height: 768px;
 }
-html:not(.touch-device) body{
+
+html:not(.touch-device) body {
   @extend %flex-center;
 }
-.center-wrapper{
+
+.center-wrapper {
   max-width: $mainFrame;
   position: relative;
   background: #f0f3f6;
   @extend %clearFix
 }
-.main-wrapper{
+
+.main-wrapper {
   @include font(14px);
   overflow-x: auto;
   padding-bottom: 30px;
@@ -81,14 +87,14 @@ html:not(.touch-device) body{
   @extend %clearFix
 }
 
-.main-header{
+.main-header {
   position: relative;
   z-index: 200;
   h1 {
     color: #8499a7;
     @include font(24px);
     padding-left: 25px;
-    padding-top:  20px;
+    padding-top: 20px;
     text-transform: uppercase;
     font-weight: bold;
     z-index: 100;
@@ -97,27 +103,33 @@ html:not(.touch-device) body{
     }
   }
 }
-#content-wrapper{
+
+#content-wrapper {
   height: 635px;
 }
-.image-wrapper{
+
+.image-wrapper {
   @extend %clearFix
 }
-.horizontal{
+
+.horizontal {
   @extend %image-style;
   width: 2 * $horizontal + 10px;
   height: $vertical;
 }
-.vertical{
+
+.vertical {
   @extend %image-style;
   width: $horizontal;
   height: 2 * $vertical +10px;
 }
-.square{
+
+.square {
   @extend %image-style;
   width: $horizontal;
   height: $vertical;
 }
+
 .down {
   width: 100%;
   height: 60px;
@@ -127,7 +139,8 @@ html:not(.touch-device) body{
   border-radius: 0 0 4px 4px;
   transition: opacity 0.4s ease-in-out;
 }
-.circle{
+
+.circle {
   position: absolute;
   right: 0;
   top: 0;
@@ -139,7 +152,7 @@ html:not(.touch-device) body{
   z-index: 1;
   text-align: center;
   background: #ffffff;
-  span{
+  span {
     display: inline;
     font-family: open_sans arial sans-serif;
     font-weight: bold; // must be 500 but bold looks like in photoshop
@@ -149,38 +162,43 @@ html:not(.touch-device) body{
   }
 }
 
-%sprite{
+%sprite {
   position: absolute;
   top: 15px;
   width: 33px;
   height: 30px;
   background: url("../images/like.png") no-repeat;
 }
-.like{
+
+.like {
   @extend %sprite;
   right: 13px;
   background-position: -33px 0;
 }
-.dislike{
+
+.dislike {
   @extend %sprite;
   right: 68px;
   background-position: -66px 0;
 }
-.comments{
+
+.comments {
   @extend %sprite;
   left: 15px;
 }
-#popup-view{
+
+#popup-view {
   position: fixed;
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
-  background-color: rgba(255,255,255,0.7);
+  background-color: rgba(255, 255, 255, 0.7);
   display: none;
   z-index: 2;
 }
-.pv-wrapper{
+
+.pv-wrapper {
   @extend %box-shadow;
   @extend %clearFix;
   position: absolute;
@@ -194,21 +212,22 @@ html:not(.touch-device) body{
   background: #FFFFFF;
   border-radius: 5px;
 }
-.pv-image-wrapper{
+
+.pv-image-wrapper {
   width: 55%;
-  height: 575px;
+  height: calc(100% - 25px);
   float: left;
-  .pv-image{
+  .pv-image {
     @extend %background-image;
     width: 100%;
-    height: 515px;
+    height: calc(100% - 60px);
   }
-  .pv-like-wrapper{
+  .pv-like-wrapper {
     position: relative;
     width: 100%;
     height: 60px;
     background-color: #f5f9f7;
-    #pv-like, #pv-dislike{
+    #pv-like, #pv-dislike {
       position: absolute;
       width: 60px;
       height: 60px;
@@ -217,41 +236,41 @@ html:not(.touch-device) body{
       top: -7px;
       cursor: pointer;
       @include transition(all, 200ms, 0ms);
-      .pv-sprite{
+      .pv-sprite {
         position: relative;
         width: 33px;
         height: 30px;
         background: url("../images/like.png") no-repeat;
       }
     }
-    #pv-like.pv-active, #pv-dislike.pv-active{
+    #pv-like.pv-active, #pv-dislike.pv-active {
       top: 0;
-      .pv-sprite{
-        .circle{
+      .pv-sprite {
+        .circle {
           border-color: #FFFFFF;
         }
       }
     }
-    #pv-like.pv-active{
+    #pv-like.pv-active {
       background-color: #28d0ce;
-      .pv-sprite{
+      .pv-sprite {
         background-position: -99px 0;
       }
     }
-    #pv-dislike.pv-active{
+    #pv-dislike.pv-active {
       background-color: #d02828;
-      .pv-sprite{
+      .pv-sprite {
         background-position: -132px 0;
       }
     }
-    #pv-like{
+    #pv-like {
       right: 6px;
-      .pv-sprite{
+      .pv-sprite {
         background-position: -33px 0;
 
       }
     }
-    #pv-dislike{
+    #pv-dislike {
       right: 72px;
       .pv-sprite {
         background-position: -66px 0;
@@ -259,77 +278,82 @@ html:not(.touch-device) body{
     }
   }
 }
-.pv-comments-wrapper{
+
+.pv-comments-wrapper {
   @extend %clearFix;
   float: left;
   width: 45%;
-  position: relative;
+  height: calc(100% - 25px);
   padding: 30px 15px 0 30px;
   box-sizing: border-box;
-  #pv-close{
+  #pv-close {
     position: absolute;
     top: 10px;
     right: 10px;
     width: 20px;
     height: 20px;
     cursor: pointer;
-      &:after, &:before{
-        content:"";
-        position: absolute;
-        right: 0;
-        top: 7px;
-        width: 20px;
-        height: 5px;
-        background: #21b8c6;
-      }
-      &:after{
-        transform: rotate(45deg);
-      }
-      &:before{
-        transform: rotate(135deg);
-      }
+    &:after, &:before {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 7px;
+      width: 20px;
+      height: 5px;
+      background: #21b8c6;
+    }
+    &:after {
+      transform: rotate(45deg);
+    }
+    &:before {
+      transform: rotate(135deg);
+    }
   }
 }
-.pv-quantity-comments{
+
+.pv-quantity-comments {
   @include font(24px);
   font-weight: 500;
   color: #8499a7;
 }
-.pv-list-wrapper{
+
+.pv-list-wrapper {
 
 }
-.pv-line{
+
+.pv-line {
   height: 2px;
   background-color: #d1dae3;
   margin-right: 15px;
 }
-#pvc-cnt{
 
-  margin-top:5px;
-  height: 408px;
+#pvc-cnt {
+  padding-top: 5px;
+  height: calc(100% - 125px);
   width: 100%;
+  box-sizing: border-box;
   overflow-y: auto;
-  li{
+  li {
     //@extend %clearFix;
     list-style-type: none;
     padding: 5px 15px 0 10px;
-    .pvc-name, .pvc-time{
+    .pvc-name, .pvc-time {
       @include font(11px);
       color: #95a7b3;
       padding-bottom: 3px;
     }
-    .pvc-name{
+    .pvc-name {
       float: left;
     }
-    .pvc-time{
+    .pvc-time {
       float: right;
     }
-    .pvc-text{
+    .pvc-text {
       border: 2px solid #f0f3f6;
       border-radius: 2px;
       padding: 10px;
       clear: both;
-      span{
+      span {
         @include font(11px);
         color: #607583;
       }
@@ -337,12 +361,12 @@ html:not(.touch-device) body{
   }
 }
 
-.pvc-input-form{
+.pvc-input-form {
   @extend %clearFix;
   width: calc(100% - 25px);
 }
 
-#pvci-name{
+#pvci-name {
   @include font(14px);
   width: 100%;
   height: 22px;
@@ -352,11 +376,13 @@ html:not(.touch-device) body{
   padding-top: 5px;
   text-indent: 10px;
 }
-.pvci-comment-wrapper{
+
+.pvci-comment-wrapper {
   margin-top: 10px;
   position: relative;
 }
-#pvci-comment{
+
+#pvci-comment {
   @include font(14px);
   width: calc(100% - 54px);
   height: 42px;
@@ -364,11 +390,10 @@ html:not(.touch-device) body{
   border-radius: 2px;
   outline: none;
   resize: none;
-  text-indent: 10px;
-  padding: 2px 3px 2px 0;
+  padding: 2px 3px 2px 9px;
 }
 
-#pvci-send{
+#pvci-send {
   position: absolute;
   top: 0;
   right: 0;
@@ -380,31 +405,30 @@ html:not(.touch-device) body{
   cursor: pointer;
 
 }
-.pvci-sprite{
+
+.pvci-sprite {
   @extend %sprite;
   position: relative;
   top: auto;
   background-position: -165px;
 }
 
+:focus::-webkit-input-placeholder {
+  color: transparent;
+}
 
-:focus::-webkit-input-placeholder { color:transparent; }
 ::-webkit-input-placeholder {
-  text-indent: 10px;
+  padding-left: 5px;
   padding-top: 5px;
 }
 
-.add-file-wrapper{
+.add-file-wrapper {
   background-color: #FFFFFF;
   cursor: auto;
-  //@extend %flex-center;
-  #files{
+  #files {
     display: none;
-    //width: 0.1px;
-    //height: 0.1px;
-    //outline: none;
   }
-  .af-label{
+  .af-label {
     display: block;
     cursor: pointer;
     text-align: center;
@@ -415,16 +439,16 @@ html:not(.touch-device) body{
       border-radius: 50%;
       background-color: #21b8c6;
       margin: 0 auto;
-      -webkit-box-shadow: 0px 3px 4px -2px rgba(0,0,0,0.35);
-      -moz-box-shadow: 0px 3px 4px -2px rgba(0,0,0,0.35);
-      box-shadow: 0px 3px 4px -2px rgba(0,0,0,0.35);
+      -webkit-box-shadow: 0px 3px 4px -2px rgba(0, 0, 0, 0.35);
+      -moz-box-shadow: 0px 3px 4px -2px rgba(0, 0, 0, 0.35);
+      box-shadow: 0px 3px 4px -2px rgba(0, 0, 0, 0.35);
       @extend %flex-center;
       img {
         width: 20px;
         height: 20px;
       }
     }
-    span{
+    span {
       @include font(14px);
       font-weight: 500;
       color: #a0b0ba;
@@ -433,34 +457,73 @@ html:not(.touch-device) body{
     }
   }
 }
+
 //custom scroll
 
 .scroll-box::-webkit-scrollbar {
   width: 5px;
   height: 10px;
 }
+
 .scroll-box::-webkit-scrollbar-track {
   border-radius: 5px;
   background: #d2d9e1;
 }
+
 .scroll-box::-webkit-scrollbar-thumb {
   border-radius: 5px;
   background: #21b7c5;
 }
+
+@media only screen and (max-height: 690px) {
+  .pv-wrapper {
+    height: calc(100% - 40px);
+  }
+  .main-header {
+    z-index: 1;
+  }
+}
+
 @media only screen and (max-height: 545px) {
-  .vertical{
+  .vertical {
     height: 200px;
   }
 }
 
+@media only screen and (max-width: 850px) {
+  .pv-wrapper {
+    width: calc(100% - 40px);
+  }
+  .pv-comments-wrapper {
+    padding: 15px 15px 0 15px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .pv-image-wrapper {
+    width: 100%;
+    height: calc(50% - 25px);
+  }
+  .pv-image-wrapper .pv-image{
+    border-radius: 5px 5px 0 0;
+  }
+  .pv-comments-wrapper {
+    width: 100%;
+    height: calc(50% - 25px);
+  }
+  #pvc-cnt {
+    height: calc(100% - 100px);
+  }
+}
+
 @media only screen and (max-width: 470px) {
-  .main-header{
+  .main-header {
     h1 {
       font-size: 16px;
       padding-left: 20px;
     }
   }
-  .horizontal{
+  .horizontal {
     width: 236px;
   }
 }
