@@ -62,7 +62,9 @@ $horizontal: 236px;
     opacity: 1;
   }
 }
-
+html:not(.touch-device){
+  height: 100%;
+}
 body {
   background-color: #FFFFFF;
   //min-height: 768px;
@@ -70,6 +72,7 @@ body {
 
 html:not(.touch-device) body {
   @extend %flex-center;
+  height: 100%;
 }
 
 .center-wrapper {

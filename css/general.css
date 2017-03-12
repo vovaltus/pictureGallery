@@ -69,8 +69,14 @@ html:not(.touch-device) body, .pv-image-wrapper .pv-like-wrapper #pv-like, .pv-i
   .horizontal:hover .down, .vertical:hover .down, .square:hover .down {
     opacity: 1; }
 
+html:not(.touch-device) {
+  height: 100%; }
+
 body {
   background-color: #FFFFFF; }
+
+html:not(.touch-device) body {
+  height: 100%; }
 
 .center-wrapper {
   max-width: 1024px;
