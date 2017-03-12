@@ -142,7 +142,7 @@ Gallery.UI = function () {
                 fileWriter.seek(0);
 
                 if (fileName.localeCompare("data.json") === 0) {
-                    var b = new Blob([JSON.stringify(object)], {type: "text/plain"});
+                    var b = new Blob([JSON.stringify(object)], {type: "application/json"});
                     fileWriter.write(b);
                 } else {
                     fileWriter.write(object);
