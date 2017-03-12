@@ -86,7 +86,6 @@ Gallery.UI = function () {
 
             FR.readAsDataURL(file);
         } else {
-            //noinspection JSDeprecatedSymbols
             ui.writeFile(file, file.name)
         }
 
@@ -254,7 +253,7 @@ Gallery.UI = function () {
         var addWrapper = document.createElement("div"),
             input = document.createElement("INPUT"),
             label = document.createElement("label"),
-            figure = document.createElement("figure"),
+            afCircle = document.createElement("span"),
             image = document.createElement("img"),
             span = document.createElement("span");
         addWrapper.classList.add("square", "add-file-wrapper", "image-wrapper");
@@ -266,11 +265,11 @@ Gallery.UI = function () {
         label.classList.add("af-label");
         image.classList.add("af-img");
         image.src = "images/white_cross.png";
-        figure.classList.add("af-figure");
+        afCircle.classList.add("af-circle");
         span.classList.add("af-span");
         span.innerHTML = "Add your<br>Picture";
-        figure.appendChild(image);
-        label.appendChild(figure);
+        afCircle.appendChild(image);
+        label.appendChild(afCircle);
         label.appendChild(span);
         addWrapper.appendChild(input);
         addWrapper.appendChild(label);
@@ -334,7 +333,9 @@ Gallery.UI = function () {
             });
             pvcCnt.appendChild(fragment);
             //save json to file storage
-            ui.writeFile(ui.var.json, "data.json")
+            if (ui.var.globFs !== null) {
+                ui.writeFile(ui.var.json, "data.json")
+            }
         },
         addComment: function () {
             var pvcCnt = document.getElementById("pvc-cnt"),
@@ -366,7 +367,9 @@ Gallery.UI = function () {
             $("#pvci-comment").val("");
             ui.updateData();
             //save json to file storage
-            ui.writeFile(ui.var.json, "data.json")
+            if (ui.var.globFs !== null) {
+                ui.writeFile(ui.var.json, "data.json");
+            }
         },
         buildComment: function (item, fragment) {
             var li = document.createElement("li"),
@@ -444,7 +447,9 @@ Gallery.UI = function () {
                 this.classList.toggle("pv-active");
             }
             //save json to file storage
-            ui.writeFile(ui.var.json, "data.json");
+            if (ui.var.globFs !== null) {
+                ui.writeFile(ui.var.json, "data.json");
+            }
             ui.updateData();
         },
         data: function (like, dislike, id) {

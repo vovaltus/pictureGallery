@@ -433,7 +433,7 @@ html:not(.touch-device) body {
     cursor: pointer;
     text-align: center;
     margin: 75px auto auto auto;
-    figure {
+    .af-circle{
       width: 50px;
       height: 50px;
       border-radius: 50%;
